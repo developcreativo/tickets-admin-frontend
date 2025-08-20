@@ -40,7 +40,7 @@
               type="password"
               required
               class="input mt-1"
-              placeholder="••••••••"
+              placeholder="admin1234"
               :disabled="authStore.isLoading"
             />
           </div>
@@ -75,7 +75,7 @@
 
       <div class="text-center">
         <p class="text-xs text-gray-500">
-          Usa las credenciales de administrador del sistema
+          Usuario: admin | Contraseña: admin1234
         </p>
       </div>
     </div>
@@ -99,10 +99,15 @@ const error = ref('')
 const handleLogin = async () => {
   error.value = ''
   
+  console.log('Attempting login with:', credentials.value)
   const result = await authStore.login(credentials.value)
+  
+  console.log('Login result:', result)
   
   if (!result.success) {
     error.value = result.error
+  } else {
+    console.log('Login successful, redirecting...')
   }
 }
 </script>

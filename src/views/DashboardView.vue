@@ -104,16 +104,62 @@
       <!-- Tickets por Zona -->
       <div class="card">
         <h3 class="text-lg font-medium text-gray-900 mb-4">Tickets por Zona</h3>
-        <div class="h-64">
-          <canvas ref="zoneChart"></canvas>
+        <div class="h-64 flex items-center justify-center bg-gray-50 rounded-lg">
+          <div class="text-center">
+            <div class="text-4xl font-bold text-primary-600 mb-2">156</div>
+            <div class="text-sm text-gray-600">Total de tickets</div>
+            <div class="mt-4 space-y-2 text-sm">
+              <div class="flex justify-between">
+                <span>Zona Norte:</span>
+                <span class="font-medium">45 tickets</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Zona Sur:</span>
+                <span class="font-medium">32 tickets</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Zona Este:</span>
+                <span class="font-medium">28 tickets</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Zona Oeste:</span>
+                <span class="font-medium">51 tickets</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Tickets por Hora -->
       <div class="card">
         <h3 class="text-lg font-medium text-gray-900 mb-4">Tickets por Hora</h3>
-        <div class="h-64">
-          <canvas ref="hourChart"></canvas>
+        <div class="h-64 flex items-center justify-center bg-gray-50 rounded-lg">
+          <div class="text-center">
+            <div class="text-4xl font-bold text-success-600 mb-2">25</div>
+            <div class="text-sm text-gray-600">Promedio por hora</div>
+            <div class="mt-4 space-y-2 text-sm">
+              <div class="flex justify-between">
+                <span>8:00 - 10:00:</span>
+                <span class="font-medium">12 tickets</span>
+              </div>
+              <div class="flex justify-between">
+                <span>10:00 - 12:00:</span>
+                <span class="font-medium">19 tickets</span>
+              </div>
+              <div class="flex justify-between">
+                <span>12:00 - 14:00:</span>
+                <span class="font-medium">25 tickets</span>
+              </div>
+              <div class="flex justify-between">
+                <span>14:00 - 16:00:</span>
+                <span class="font-medium">32 tickets</span>
+              </div>
+              <div class="flex justify-between">
+                <span>16:00 - 18:00:</span>
+                <span class="font-medium">28 tickets</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -146,7 +192,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import {
   TicketIcon,
   CurrencyDollarIcon,
@@ -157,7 +203,6 @@ import {
   PlusIcon,
   ChartBarIcon
 } from '@heroicons/vue/24/outline'
-import Chart from 'chart.js/auto'
 
 // Stats mock data
 const stats = ref({
@@ -196,9 +241,6 @@ const recentActivity = ref([
   }
 ])
 
-const zoneChart = ref(null)
-const hourChart = ref(null)
-
 const getActivityColor = (type) => {
   const colors = {
     ticket: 'bg-primary-500',
@@ -228,56 +270,4 @@ const getActivityBadgeColor = (type) => {
   }
   return colors[type] || 'bg-gray-100 text-gray-800'
 }
-
-onMounted(() => {
-  // Chart 1: Tickets por Zona
-  new Chart(zoneChart.value, {
-    type: 'doughnut',
-    data: {
-      labels: ['Zona Norte', 'Zona Sur', 'Zona Este', 'Zona Oeste'],
-      datasets: [{
-        data: [45, 32, 28, 51],
-        backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444']
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: 'bottom'
-        }
-      }
-    }
-  })
-
-  // Chart 2: Tickets por Hora
-  new Chart(hourChart.value, {
-    type: 'line',
-    data: {
-      labels: ['8:00', '10:00', '12:00', '14:00', '16:00', '18:00'],
-      datasets: [{
-        label: 'Tickets',
-        data: [12, 19, 25, 32, 28, 15],
-        borderColor: '#3B82F6',
-        backgroundColor: 'rgba(59, 130, 246, 0.1)',
-        tension: 0.4
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        }
-      },
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-  })
-})
 </script>

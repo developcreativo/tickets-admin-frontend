@@ -2,6 +2,7 @@
     "name": "tickets-admin-frontend",
     "version": "1.0.0",
     "description": "Dashboard de administración para sistema de emisión de tickets",
+    "type": "module",
     "main": "index.js",
     "scripts": {
         "dev": "vite",
