@@ -30,9 +30,9 @@
               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Todos los roles</option>
-              <option value="admin">Administrador</option>
-              <option value="manager">Gerente</option>
-              <option value="user">Usuario</option>
+              <option value="ADMIN">Administrador</option>
+              <option value="SELLER">Vendedor</option>
+              <option value="SUPERVISOR">Supervisor</option>
             </select>
           </div>
           <div>
@@ -44,14 +44,49 @@
               <option value="">Todos los estados</option>
               <option value="active">Activo</option>
               <option value="inactive">Inactivo</option>
-              <option value="suspended">Suspendido</option>
             </select>
           </div>
         </div>
       </div>
 
+      <!-- Indicador de carga -->
+      <div v-if="usersStore.isLoading" class="bg-white rounded-lg shadow-sm p-8 text-center">
+        <div class="inline-flex items-center">
+          <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span class="text-gray-600">Cargando usuarios...</span>
+        </div>
+      </div>
+
+      <!-- Mensaje de error -->
+      <div v-else-if="usersStore.error" class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="ml-3">
+            <h3 class="text-sm font-medium text-red-800">Error al cargar usuarios</h3>
+            <div class="mt-2 text-sm text-red-700">
+              {{ usersStore.error }}
+            </div>
+            <div class="mt-4">
+              <button 
+                @click="retryLoad"
+                class="bg-red-100 text-red-800 px-3 py-1 rounded-md text-sm font-medium hover:bg-red-200"
+              >
+                Reintentar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Tabla de usuarios -->
-      <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+      <div v-else class="bg-white rounded-lg shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
@@ -66,10 +101,13 @@
                   Rol
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Zona
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Estado
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Último Acceso
+                  Fecha de Registro
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Acciones
@@ -77,14 +115,27 @@
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
-              <tr v-for="user in filteredUsers" :key="user.id" class="hover:bg-gray-50">
+              <tr v-if="paginatedUsers.length === 0" class="hover:bg-gray-50">
+                <td colspan="7" class="px-6 py-8 text-center">
+                  <div class="text-gray-500">
+                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                    </svg>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">No se encontraron usuarios</h3>
+                    <p class="mt-1 text-sm text-gray-500">
+                      {{ searchQuery ? 'Intenta con otros términos de búsqueda.' : 'No hay usuarios registrados.' }}
+                    </p>
+                  </div>
+                </td>
+              </tr>
+              <tr v-for="user in paginatedUsers" :key="user.id" class="hover:bg-gray-50">
                 <td class="px-6 py-4 whitespace-nowrap">
                   <div class="flex items-center">
-                    <div class="flex-shrink-0 h-10 w-10">
-                      <img class="h-10 w-10 rounded-full" :src="user.avatar" :alt="user.name">
+                    <div class="flex-shrink-0 h-10 w-10 bg-primary-100 rounded-lg flex items-center justify-center">
+                      <span class="text-primary-600 font-medium">{{ getUserFullName(user).charAt(0) }}</span>
                     </div>
                     <div class="ml-4">
-                      <div class="text-sm font-medium text-gray-900">{{ user.name }}</div>
+                      <div class="text-sm font-medium text-gray-900">{{ getUserFullName(user) }}</div>
                       <div class="text-sm text-gray-500">{{ user.username }}</div>
                     </div>
                   </div>
@@ -95,17 +146,20 @@
                 <td class="px-6 py-4 whitespace-nowrap">
                   <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full" 
                         :class="getRoleClass(user.role)">
-                    {{ user.role }}
+                    {{ getRoleText(user.role) }}
                   </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {{ getZoneName(user.zone) }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
                   <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full" 
-                        :class="getStatusClass(user.status)">
-                    {{ user.status }}
+                        :class="getStatusClass(user.is_active)">
+                    {{ getStatusText(user.is_active) }}
                   </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {{ formatDate(user.lastLogin) }}
+                  {{ formatDate(user.date_joined) }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <button 
@@ -116,9 +170,15 @@
                   </button>
                   <button 
                     @click="toggleUserStatus(user)"
-                    :class="user.status === 'active' ? 'text-red-600 hover:text-red-900' : 'text-green-600 hover:text-green-900'"
+                    :class="user.is_active ? 'text-red-600 hover:text-red-900' : 'text-green-600 hover:text-green-900'"
                   >
-                    {{ user.status === 'active' ? 'Desactivar' : 'Activar' }}
+                    {{ user.is_active ? 'Desactivar' : 'Activar' }}
+                  </button>
+                  <button 
+                    @click="deleteUser(user.id)"
+                    class="text-red-600 hover:text-red-900 ml-3"
+                  >
+                    Eliminar
                   </button>
                 </td>
               </tr>
@@ -204,9 +264,18 @@
           <form @submit.prevent="saveUser">
             <div class="space-y-4">
               <div>
-                <label class="block text-sm font-medium text-gray-700">Nombre Completo</label>
+                <label class="block text-sm font-medium text-gray-700">Nombre</label>
                 <input 
-                  v-model="form.name"
+                  v-model="form.first_name"
+                  type="text" 
+                  required
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Apellido</label>
+                <input 
+                  v-model="form.last_name"
                   type="text" 
                   required
                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -247,22 +316,32 @@
                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Seleccionar rol</option>
-                  <option value="admin">Administrador</option>
-                  <option value="manager">Gerente</option>
-                  <option value="user">Usuario</option>
+                  <option value="ADMIN">Administrador</option>
+                  <option value="SELLER">Vendedor</option>
+                  <option value="SUPERVISOR">Supervisor</option>
                 </select>
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700">Estado</label>
+                <label class="block text-sm font-medium text-gray-700">Zona</label>
                 <select 
-                  v-model="form.status"
-                  required
+                  v-model="form.zone"
                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="active">Activo</option>
-                  <option value="inactive">Inactivo</option>
-                  <option value="suspended">Suspendido</option>
+                  <option value="">Sin zona asignada</option>
+                  <option v-for="zone in catalogStore.zones" :key="zone.id" :value="zone.id">
+                    {{ zone.name }}
+                  </option>
                 </select>
+              </div>
+              <div>
+                <label class="flex items-center">
+                  <input 
+                    v-model="form.is_active"
+                    type="checkbox" 
+                    class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                  >
+                  <span class="ml-2 text-sm text-gray-700">Usuario activo</span>
+                </label>
               </div>
             </div>
             <div class="flex justify-end space-x-3 mt-6">
@@ -287,246 +366,243 @@
   </div>
 </template>
 
-<script>
-import { ref, computed, onMounted } from 'vue'
+<script setup>
+import { ref, computed, onMounted, watch } from 'vue'
+import { useUsersStore } from '../stores/users'
+import { useCatalogStore } from '../stores/catalog'
 
-export default {
-  name: 'UsersView',
-  setup() {
-    const users = ref([])
-    const searchQuery = ref('')
-    const selectedRole = ref('')
-    const selectedStatus = ref('')
-    const showAddModal = ref(false)
-    const editingUser = ref(null)
-    const currentPage = ref(1)
-    const usersPerPage = ref(10)
+const usersStore = useUsersStore()
+const catalogStore = useCatalogStore()
 
-    const form = ref({
-      name: '',
-      username: '',
-      email: '',
-      password: '',
-      role: '',
-      status: 'active'
-    })
+// Estados locales
+const searchQuery = ref('')
+const selectedRole = ref('')
+const selectedStatus = ref('')
+const showAddModal = ref(false)
+const editingUser = ref(null)
+const currentPage = ref(1)
+const usersPerPage = ref(10)
 
-    // Datos de ejemplo
-    const mockUsers = [
-      {
-        id: 1,
-        name: 'Juan Pérez',
-        username: 'juan.perez',
-        email: 'juan.perez@example.com',
-        role: 'admin',
-        status: 'active',
-        lastLogin: '2024-01-15T10:30:00Z',
-        avatar: 'https://via.placeholder.com/40'
-      },
-      {
-        id: 2,
-        name: 'María García',
-        username: 'maria.garcia',
-        email: 'maria.garcia@example.com',
-        role: 'manager',
-        status: 'active',
-        lastLogin: '2024-01-14T15:45:00Z',
-        avatar: 'https://via.placeholder.com/40'
-      },
-      {
-        id: 3,
-        name: 'Carlos López',
-        username: 'carlos.lopez',
-        email: 'carlos.lopez@example.com',
-        role: 'user',
-        status: 'inactive',
-        lastLogin: '2024-01-10T09:15:00Z',
-        avatar: 'https://via.placeholder.com/40'
-      }
-    ]
+// Formulario
+const form = ref({
+  username: '',
+  first_name: '',
+  last_name: '',
+  email: '',
+  password: '',
+  role: 'SELLER',
+  zone: '',
+  is_active: true
+})
 
-    const filteredUsers = computed(() => {
-      let filtered = users.value
+// Computed properties
+const filteredUsers = computed(() => {
+  let filtered = usersStore.users
 
-      if (searchQuery.value) {
-        filtered = filtered.filter(user => 
-          user.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-          user.username.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-          user.email.toLowerCase().includes(searchQuery.value.toLowerCase())
-        )
-      }
+  if (searchQuery.value) {
+    filtered = filtered.filter(user => 
+      `${user.first_name} ${user.last_name}`.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      user.username.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchQuery.value.toLowerCase())
+    )
+  }
 
-      if (selectedRole.value) {
-        filtered = filtered.filter(user => user.role === selectedRole.value)
-      }
+  if (selectedRole.value) {
+    filtered = filtered.filter(user => user.role === selectedRole.value)
+  }
 
-      if (selectedStatus.value) {
-        filtered = filtered.filter(user => user.status === selectedStatus.value)
-      }
+  if (selectedStatus.value) {
+    filtered = filtered.filter(user => user.is_active === (selectedStatus.value === 'active'))
+  }
 
-      return filtered
-    })
+  return filtered
+})
 
-    const totalUsers = computed(() => filteredUsers.value.length)
-    const totalPages = computed(() => Math.ceil(totalUsers.value / usersPerPage.value))
-    const startIndex = computed(() => (currentPage.value - 1) * usersPerPage.value)
-    const endIndex = computed(() => Math.min(startIndex.value + usersPerPage.value, totalUsers.value))
+const paginatedUsers = computed(() => {
+  const start = startIndex.value
+  const end = endIndex.value
+  return filteredUsers.value.slice(start, end)
+})
 
-    const visiblePages = computed(() => {
-      const pages = []
-      const maxVisible = 5
-      let start = Math.max(1, currentPage.value - Math.floor(maxVisible / 2))
-      let end = Math.min(totalPages.value, start + maxVisible - 1)
-      
-      if (end - start + 1 < maxVisible) {
-        start = Math.max(1, end - maxVisible + 1)
-      }
+const totalUsers = computed(() => filteredUsers.value.length)
+const totalPages = computed(() => Math.ceil(totalUsers.value / usersPerPage.value))
+const startIndex = computed(() => (currentPage.value - 1) * usersPerPage.value)
+const endIndex = computed(() => Math.min(startIndex.value + usersPerPage.value, totalUsers.value))
 
-      for (let i = start; i <= end; i++) {
-        pages.push(i)
-      }
-      return pages
-    })
+const visiblePages = computed(() => {
+  const pages = []
+  const maxVisible = 5
+  let start = Math.max(1, currentPage.value - Math.floor(maxVisible / 2))
+  let end = Math.min(totalPages.value, start + maxVisible - 1)
+  
+  if (end - start + 1 < maxVisible) {
+    start = Math.max(1, end - maxVisible + 1)
+  }
 
-    const getRoleClass = (role) => {
-      const classes = {
-        admin: 'bg-red-100 text-red-800',
-        manager: 'bg-blue-100 text-blue-800',
-        user: 'bg-green-100 text-green-800'
-      }
-      return classes[role] || 'bg-gray-100 text-gray-800'
+  for (let i = start; i <= end; i++) {
+    pages.push(i)
+  }
+  return pages
+})
+
+// Funciones de utilidad
+const getRoleClass = (role) => {
+  const classes = {
+    ADMIN: 'bg-red-100 text-red-800',
+    SELLER: 'bg-green-100 text-green-800',
+    SUPERVISOR: 'bg-blue-100 text-blue-800'
+  }
+  return classes[role] || 'bg-gray-100 text-gray-800'
+}
+
+const getRoleText = (role) => {
+  const texts = {
+    ADMIN: 'Administrador',
+    SELLER: 'Vendedor',
+    SUPERVISOR: 'Supervisor'
+  }
+  return texts[role] || role
+}
+
+const getStatusClass = (isActive) => {
+  return isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+}
+
+const getStatusText = (isActive) => {
+  return isActive ? 'Activo' : 'Inactivo'
+}
+
+const formatDate = (dateString) => {
+  if (!dateString) return 'N/A'
+  return new Date(dateString).toLocaleDateString('es-ES', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+}
+
+const getZoneName = (zoneId) => {
+  if (!zoneId) return 'N/A'
+  const zone = catalogStore.zones.find(z => z.id === zoneId)
+  return zone ? zone.name : 'N/A'
+}
+
+const getUserFullName = (user) => {
+  const firstName = user.first_name || ''
+  const lastName = user.last_name || ''
+  return `${firstName} ${lastName}`.trim() || user.username
+}
+
+// Funciones CRUD
+const editUser = (user) => {
+  editingUser.value = user
+  form.value = { 
+    username: user.username,
+    first_name: user.first_name || '',
+    last_name: user.last_name || '',
+    email: user.email,
+    password: '',
+    role: user.role,
+    zone: user.zone || '',
+    is_active: user.is_active
+  }
+  showAddModal.value = true
+}
+
+const saveUser = async () => {
+  try {
+    if (editingUser.value) {
+      await usersStore.updateUser(editingUser.value.id, form.value)
+    } else {
+      await usersStore.createUser(form.value)
     }
+    
+    resetForm()
+    showAddModal.value = false
+  } catch (error) {
+    console.error('Error saving user:', error)
+  }
+}
 
-    const getStatusClass = (status) => {
-      const classes = {
-        active: 'bg-green-100 text-green-800',
-        inactive: 'bg-gray-100 text-gray-800',
-        suspended: 'bg-red-100 text-red-800'
-      }
-      return classes[status] || 'bg-gray-100 text-gray-800'
-    }
+const toggleUserStatus = async (user) => {
+  try {
+    await usersStore.toggleUserStatus(user.id)
+  } catch (error) {
+    console.error('Error toggling user status:', error)
+  }
+}
 
-    const formatDate = (dateString) => {
-      return new Date(dateString).toLocaleDateString('es-ES', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      })
-    }
-
-    const loadUsers = () => {
-      // Simular carga de datos desde API
-      users.value = mockUsers
-    }
-
-    const editUser = (user) => {
-      editingUser.value = user
-      form.value = { 
-        name: user.name,
-        username: user.username,
-        email: user.email,
-        password: '',
-        role: user.role,
-        status: user.status
-      }
-      showAddModal.value = true
-    }
-
-    const saveUser = () => {
-      if (editingUser.value) {
-        // Actualizar usuario existente
-        const index = users.value.findIndex(user => user.id === editingUser.value.id)
-        if (index !== -1) {
-          users.value[index] = { 
-            ...editingUser.value, 
-            ...form.value,
-            lastLogin: editingUser.value.lastLogin
-          }
-        }
-      } else {
-        // Agregar nuevo usuario
-        const newUser = {
-          id: Date.now(),
-          ...form.value,
-          lastLogin: new Date().toISOString(),
-          avatar: 'https://via.placeholder.com/40'
-        }
-        users.value.push(newUser)
-      }
-      
-      resetForm()
-      showAddModal.value = false
-    }
-
-    const toggleUserStatus = (user) => {
-      const newStatus = user.status === 'active' ? 'inactive' : 'active'
-      const index = users.value.findIndex(u => u.id === user.id)
-      if (index !== -1) {
-        users.value[index] = { ...user, status: newStatus }
-      }
-    }
-
-    const resetForm = () => {
-      form.value = {
-        name: '',
-        username: '',
-        email: '',
-        password: '',
-        role: '',
-        status: 'active'
-      }
-      editingUser.value = null
-    }
-
-    const previousPage = () => {
-      if (currentPage.value > 1) {
-        currentPage.value--
-      }
-    }
-
-    const nextPage = () => {
-      if (currentPage.value < totalPages.value) {
-        currentPage.value++
-      }
-    }
-
-    const goToPage = (page) => {
-      currentPage.value = page
-    }
-
-    onMounted(() => {
-      loadUsers()
-    })
-
-    return {
-      users,
-      searchQuery,
-      selectedRole,
-      selectedStatus,
-      showAddModal,
-      editingUser,
-      form,
-      currentPage,
-      filteredUsers,
-      totalUsers,
-      totalPages,
-      startIndex,
-      endIndex,
-      visiblePages,
-      getRoleClass,
-      getStatusClass,
-      formatDate,
-      editUser,
-      saveUser,
-      toggleUserStatus,
-      previousPage,
-      nextPage,
-      goToPage
+const deleteUser = async (id) => {
+  if (confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
+    try {
+      await usersStore.deleteUser(id)
+    } catch (error) {
+      console.error('Error deleting user:', error)
     }
   }
 }
+
+const resetForm = () => {
+  form.value = {
+    username: '',
+    first_name: '',
+    last_name: '',
+    email: '',
+    password: '',
+    role: 'SELLER',
+    zone: '',
+    is_active: true
+  }
+  editingUser.value = null
+}
+
+const previousPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--
+  }
+}
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++
+  }
+}
+
+const goToPage = (page) => {
+  currentPage.value = page
+}
+
+// Función para reintentar carga
+const retryLoad = async () => {
+  try {
+    usersStore.clearError()
+    await Promise.all([
+      usersStore.fetchUsers(),
+      catalogStore.fetchZones()
+    ])
+  } catch (error) {
+    console.error('Error retrying load:', error)
+  }
+}
+
+// Watcher para resetear paginación cuando cambia la búsqueda
+watch(searchQuery, () => {
+  currentPage.value = 1
+})
+
+// Cargar datos al montar el componente
+onMounted(async () => {
+  try {
+    await Promise.all([
+      usersStore.fetchUsers(),
+      catalogStore.fetchZones()
+    ])
+  } catch (error) {
+    console.error('Error loading data:', error)
+  }
+})
 </script>
 
 <style scoped>
