@@ -61,9 +61,7 @@
           
           <div class="flex items-center space-x-4">
             <!-- Notifications -->
-            <button class="p-2 text-gray-400 hover:text-gray-500">
-              <BellIcon class="w-6 h-6" />
-            </button>
+            <NotificationCenter />
             
             <!-- User menu -->
             <div class="relative">
@@ -102,6 +100,7 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '../../stores/auth'
+import NotificationCenter from '../notifications/NotificationCenter.vue'
 import {
   Bars3Icon,
   XMarkIcon,
@@ -110,6 +109,7 @@ import {
   HomeIcon,
   FolderIcon,
   UsersIcon,
+  DocumentTextIcon,
   ChartBarIcon,
   Cog6ToothIcon
 } from '@heroicons/vue/24/outline'
@@ -125,6 +125,7 @@ const navigation = [
   { name: 'Dashboard', href: '/', icon: HomeIcon },
   { name: 'Catálogos', href: '/catalog', icon: FolderIcon },
   { name: 'Usuarios', href: '/users', icon: UsersIcon },
+  { name: 'Tickets', href: '/tickets', icon: DocumentTextIcon },
   { name: 'Reportes', href: '/reports', icon: ChartBarIcon },
   { name: 'Configuración', href: '/settings', icon: Cog6ToothIcon },
 ]
