@@ -8,6 +8,7 @@ export const useAuthStore = defineStore('auth', () => {
     const user = ref(null)
     const token = ref(localStorage.getItem('token') || null)
     const isLoading = ref(false)
+    const error = ref(null)
 
     // Token se adjunta vía interceptor en utils/api
 
@@ -26,6 +27,7 @@ export const useAuthStore = defineStore('auth', () => {
     const login = async (credentials) => {
         try {
             isLoading.value = true
+            error.value = null
             console.log('Starting login process...')
 
             // Hacer petición real al backend
@@ -63,6 +65,9 @@ export const useAuthStore = defineStore('auth', () => {
                 errorMessage = 'No se puede conectar al servidor. Verifica que el backend esté ejecutándose.'
             }
 
+            // Guardar el error en el store
+            error.value = errorMessage
+
             return {
                 success: false,
                 error: errorMessage
@@ -79,9 +84,15 @@ export const useAuthStore = defineStore('auth', () => {
             user.value = response.data
             localStorage.setItem('user', JSON.stringify(response.data))
             console.log('User data fetched successfully:', response.data)
+            return response.data
         } catch (error) {
             console.error('Error obteniendo usuario:', error)
-            logout()
+            if (error.response?.status === 401) {
+                // Token inválido, hacer logout
+                logout()
+                throw new Error('Token inválido o expirado')
+            }
+            throw error
         }
     }
 
@@ -89,6 +100,7 @@ export const useAuthStore = defineStore('auth', () => {
         console.log('Logging out...')
         user.value = null
         token.value = null
+        error.value = null
         localStorage.removeItem('token')
         localStorage.removeItem('refreshToken')
         localStorage.removeItem('user')
@@ -125,27 +137,41 @@ export const useAuthStore = defineStore('auth', () => {
 
     // Verificar token al inicializar
     const initializeAuth = async () => {
-        if (token.value) {
-            console.log('Initializing auth with existing token')
-            await fetchUser()
-        } else {
-            console.log('No existing token found')
+        try {
+            if (token.value) {
+                console.log('Initializing auth with existing token')
+                await fetchUser()
+            } else {
+                console.log('No existing token found')
+            }
+        } catch (error) {
+            console.error('Error during auth initialization:', error)
+            // Si hay error durante la inicialización, limpiar estado
+            logout()
+        } finally {
+            isInitialized.value = true
         }
-        isInitialized.value = true
     }
 
     // Inicializar inmediatamente
     initializeAuth()
 
+    // Limpiar error
+    const clearError = () => {
+        error.value = null
+    }
+
     return {
         user,
         token,
         isLoading,
+        error,
         isAuthenticated,
         isInitialized,
         login,
         logout,
         fetchUser,
-        refreshToken
+        refreshToken,
+        clearError
     }
 })

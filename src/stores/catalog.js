@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import axios from 'axios'
+import api from '../utils/api'
 
 export const useCatalogStore = defineStore('catalog', () => {
     // Estados
@@ -21,7 +21,7 @@ export const useCatalogStore = defineStore('catalog', () => {
         try {
             isLoading.value = true
             error.value = null
-            const response = await axios.get('/api/catalog/zones/')
+            const response = await api.get('/catalog/zones/')
             zones.value = response.data
             console.log('Zones fetched:', zones.value)
         } catch (err) {
@@ -37,7 +37,7 @@ export const useCatalogStore = defineStore('catalog', () => {
         try {
             isLoading.value = true
             error.value = null
-            const response = await axios.get('/api/catalog/draw-types/')
+            const response = await api.get('/catalog/draw-types/')
             drawTypes.value = response.data
             console.log('Draw types fetched:', drawTypes.value)
         } catch (err) {
@@ -53,9 +53,9 @@ export const useCatalogStore = defineStore('catalog', () => {
         try {
             isLoading.value = true
             error.value = null
-            const response = await axios.get('/api/catalog/draw-schedules/')
+            const response = await api.get('/catalog/draw-schedules/')
             drawSchedules.value = response.data
-            console.log('Draw schedules fetched:', drawSchedules.value)
+            console.log('Draw schedules fetched:', drawTypes.value)
         } catch (err) {
             console.error('Error fetching draw schedules:', err)
             error.value = 'Error al cargar los horarios de sorteo'
@@ -69,9 +69,9 @@ export const useCatalogStore = defineStore('catalog', () => {
         try {
             isLoading.value = true
             error.value = null
-            const response = await axios.get('/api/catalog/number-limits/')
+            const response = await api.get('/catalog/number-limits/')
             numberLimits.value = response.data
-            console.log('Number limits fetched:', numberLimits.value)
+            console.log('Number limits fetched:', drawTypes.value)
         } catch (err) {
             console.error('Error fetching number limits:', err)
             error.value = 'Error al cargar los límites de números'
@@ -86,7 +86,7 @@ export const useCatalogStore = defineStore('catalog', () => {
         try {
             isLoading.value = true
             error.value = null
-            const response = await axios.post('/api/catalog/zones/', zoneData)
+            const response = await api.post('/catalog/zones/', zoneData)
             zones.value.push(response.data)
             return response.data
         } catch (err) {
@@ -102,7 +102,7 @@ export const useCatalogStore = defineStore('catalog', () => {
         try {
             isLoading.value = true
             error.value = null
-            const response = await axios.put(`/api/catalog/zones/${id}/`, zoneData)
+            const response = await api.put(`/catalog/zones/${id}/`, zoneData)
             const index = zones.value.findIndex(zone => zone.id === id)
             if (index !== -1) {
                 zones.value[index] = response.data
@@ -121,7 +121,7 @@ export const useCatalogStore = defineStore('catalog', () => {
         try {
             isLoading.value = true
             error.value = null
-            await axios.delete(`/api/catalog/zones/${id}/`)
+            await api.delete(`/catalog/zones/${id}/`)
             zones.value = zones.value.filter(zone => zone.id !== id)
         } catch (err) {
             console.error('Error deleting zone:', err)
@@ -137,7 +137,7 @@ export const useCatalogStore = defineStore('catalog', () => {
         try {
             isLoading.value = true
             error.value = null
-            const response = await axios.post('/api/catalog/draw-types/', drawTypeData)
+            const response = await api.post('/catalog/draw-types/', drawTypeData)
             drawTypes.value.push(response.data)
             return response.data
         } catch (err) {
@@ -153,7 +153,7 @@ export const useCatalogStore = defineStore('catalog', () => {
         try {
             isLoading.value = true
             error.value = null
-            const response = await axios.put(`/api/catalog/draw-types/${id}/`, drawTypeData)
+            const response = await api.put(`/catalog/draw-types/${id}/`, drawTypeData)
             const index = drawTypes.value.findIndex(type => type.id === id)
             if (index !== -1) {
                 drawTypes.value[index] = response.data
@@ -172,7 +172,7 @@ export const useCatalogStore = defineStore('catalog', () => {
         try {
             isLoading.value = true
             error.value = null
-            await axios.delete(`/api/catalog/draw-types/${id}/`)
+            await api.delete(`/catalog/draw-types/${id}/`)
             drawTypes.value = drawTypes.value.filter(type => type.id !== id)
         } catch (err) {
             console.error('Error deleting draw type:', err)
@@ -188,7 +188,7 @@ export const useCatalogStore = defineStore('catalog', () => {
         try {
             isLoading.value = true
             error.value = null
-            const response = await axios.post('/api/catalog/draw-schedules/', scheduleData)
+            const response = await api.post('/catalog/draw-schedules/', scheduleData)
             drawSchedules.value.push(response.data)
             return response.data
         } catch (err) {
@@ -204,7 +204,7 @@ export const useCatalogStore = defineStore('catalog', () => {
         try {
             isLoading.value = true
             error.value = null
-            const response = await axios.put(`/api/catalog/draw-schedules/${id}/`, scheduleData)
+            const response = await api.put(`/catalog/draw-schedules/${id}/`, scheduleData)
             const index = drawSchedules.value.findIndex(schedule => schedule.id === id)
             if (index !== -1) {
                 drawSchedules.value[index] = response.data
@@ -223,7 +223,7 @@ export const useCatalogStore = defineStore('catalog', () => {
         try {
             isLoading.value = true
             error.value = null
-            await axios.delete(`/api/catalog/draw-schedules/${id}/`)
+            await api.delete(`/catalog/draw-schedules/${id}/`)
             drawSchedules.value = drawSchedules.value.filter(schedule => schedule.id !== id)
         } catch (err) {
             console.error('Error deleting draw schedule:', err)

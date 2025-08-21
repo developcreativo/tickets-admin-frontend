@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import axios from 'axios'
+import api from '../utils/api'
 
 export const useUsersStore = defineStore('users', () => {
     // Estados
@@ -19,7 +19,7 @@ export const useUsersStore = defineStore('users', () => {
         try {
             isLoading.value = true
             error.value = null
-            const response = await axios.get('/api/auth/users/')
+            const response = await api.get('/auth/users/')
             users.value = response.data
             console.log('Users fetched:', users.value)
         } catch (err) {
@@ -36,7 +36,7 @@ export const useUsersStore = defineStore('users', () => {
         try {
             isLoading.value = true
             error.value = null
-            const response = await axios.post('/api/auth/users/', userData)
+            const response = await api.post('/auth/users/', userData)
             users.value.push(response.data)
             return response.data
         } catch (err) {
@@ -58,7 +58,7 @@ export const useUsersStore = defineStore('users', () => {
         try {
             isLoading.value = true
             error.value = null
-            const response = await axios.put(`/api/auth/users/${id}/`, userData)
+            const response = await api.put(`/auth/users/${id}/`, userData)
             const index = users.value.findIndex(user => user.id === id)
             if (index !== -1) {
                 users.value[index] = response.data
@@ -83,7 +83,7 @@ export const useUsersStore = defineStore('users', () => {
         try {
             isLoading.value = true
             error.value = null
-            await axios.delete(`/api/auth/users/${id}/`)
+            await api.delete(`/auth/users/${id}/`)
             users.value = users.value.filter(user => user.id !== id)
         } catch (err) {
             console.error('Error deleting user:', err)

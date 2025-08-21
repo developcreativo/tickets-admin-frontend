@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import axios from 'axios'
+import api from '../utils/api'
 
 export const useTicketsStore = defineStore('tickets', () => {
     // Estados
@@ -29,7 +29,7 @@ export const useTicketsStore = defineStore('tickets', () => {
             if (params.start_date) queryParams.append('start_date', params.start_date)
             if (params.end_date) queryParams.append('end_date', params.end_date)
 
-            const response = await axios.get(`/api/sales/tickets/?${queryParams}`)
+            const response = await api.get(`/sales/tickets/?${queryParams}`)
             tickets.value = response.data
             console.log('Tickets fetched:', tickets.value)
         } catch (err) {
@@ -54,7 +54,7 @@ export const useTicketsStore = defineStore('tickets', () => {
             isLoading.value = true
             error.value = null
 
-            const response = await axios.post('/api/sales/tickets/', ticketData)
+            const response = await api.post('/sales/tickets/', ticketData)
             tickets.value.push(response.data)
             console.log('Ticket created:', response.data)
             return response.data
@@ -82,7 +82,7 @@ export const useTicketsStore = defineStore('tickets', () => {
             isLoading.value = true
             error.value = null
 
-            const response = await axios.put(`/api/sales/tickets/${id}/`, ticketData)
+            const response = await api.put(`/sales/tickets/${id}/`, ticketData)
             const index = tickets.value.findIndex(ticket => ticket.id === id)
             if (index !== -1) {
                 tickets.value[index] = response.data
@@ -111,7 +111,7 @@ export const useTicketsStore = defineStore('tickets', () => {
             isLoading.value = true
             error.value = null
 
-            await axios.delete(`/api/sales/tickets/${id}/`)
+            await api.delete(`/sales/tickets/${id}/`)
             tickets.value = tickets.value.filter(ticket => ticket.id !== id)
             console.log('Ticket deleted:', id)
         } catch (err) {
@@ -134,7 +134,7 @@ export const useTicketsStore = defineStore('tickets', () => {
             isLoading.value = true
             error.value = null
 
-            const response = await axios.get(`/api/sales/tickets/${id}/`)
+            const response = await api.get(`/sales/tickets/${id}/`)
             currentTicket.value = response.data
             console.log('Ticket details:', response.data)
             return response.data

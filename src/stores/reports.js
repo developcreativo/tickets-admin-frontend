@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import axios from 'axios'
+import api from '../utils/api'
 
 export const useReportsStore = defineStore('reports', () => {
     // Estados
@@ -38,7 +38,7 @@ export const useReportsStore = defineStore('reports', () => {
             if (params.includeDaily) queryParams.append('daily', '1')
             if (params.forceRefresh) queryParams.append('refresh', '1')
 
-            const response = await axios.get(`/api/sales/reports/summary/?${queryParams}`)
+            const response = await api.get(`/sales/reports/summary/?${queryParams}`)
 
             // Actualizar estado
             reports.value = response.data.summary || []
@@ -77,7 +77,7 @@ export const useReportsStore = defineStore('reports', () => {
 
             queryParams.append('format', format)
 
-            const response = await axios.get(`/api/sales/reports/export/?${queryParams}`, {
+            const response = await api.get(`/sales/reports/export/?${queryParams}`, {
                 responseType: 'blob'
             })
 
@@ -105,7 +105,7 @@ export const useReportsStore = defineStore('reports', () => {
 
     const getCacheStats = async () => {
         try {
-            const response = await axios.get('/api/sales/cache/stats/')
+            const response = await api.get('/sales/cache/stats/')
             return response.data
         } catch (err) {
             console.error('Error getting cache stats:', err)
@@ -115,7 +115,7 @@ export const useReportsStore = defineStore('reports', () => {
 
     const clearCache = async () => {
         try {
-            const response = await axios.post('/api/sales/cache/clear/')
+            const response = await api.post('/sales/cache/clear/')
             return response.data
         } catch (err) {
             console.error('Error clearing cache:', err)
