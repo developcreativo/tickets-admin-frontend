@@ -1,8 +1,8 @@
 <template>
-  <div class="reports-view">
+  <div class="reports-view min-h-screen bg-gray-50 dark:bg-gray-900">
     <div class="container mx-auto px-4 py-8">
       <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold text-gray-900">Reportes y Estadísticas</h1>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Reportes y Estadísticas</h1>
         <div class="flex space-x-3">
           <button 
             @click="exportReport('csv')"
@@ -26,29 +26,29 @@
       </div>
 
       <!-- Filtros de fecha -->
-      <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+      <div class="bg-white dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow-sm p-4 mb-6">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Fecha Inicio</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Fecha Inicio</label>
             <input 
               v-model="dateRange.start"
               type="date" 
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Fecha Fin</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Fecha Fin</label>
             <input 
               v-model="dateRange.end"
               type="date" 
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Agrupar por</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Agrupar por</label>
             <select 
               v-model="groupBy"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="zone">Zona</option>
               <option value="draw_type">Tipo de Sorteo</option>
@@ -67,13 +67,13 @@
       </div>
 
       <!-- Filtros adicionales -->
-      <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+      <div class="bg-white dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow-sm p-4 mb-6">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Zona</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Zona</label>
             <select 
               v-model="selectedZone"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Todas las zonas</option>
               <option v-for="zone in catalogStore.zones" :key="zone.id" :value="zone.id">
@@ -82,10 +82,10 @@
             </select>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de Sorteo</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tipo de Sorteo</label>
             <select 
               v-model="selectedDrawType"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Todos los tipos</option>
               <option v-for="drawType in catalogStore.drawTypes" :key="drawType.id" :value="drawType.id">
@@ -94,10 +94,10 @@
             </select>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Usuario</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Usuario</label>
             <select 
               v-model="selectedUser"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Todos los usuarios</option>
               <option v-for="user in usersStore.users" :key="user.id" :value="user.id">
@@ -113,7 +113,7 @@
               type="checkbox" 
               class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
             >
-            <span class="ml-2 text-sm text-gray-700">Incluir datos diarios</span>
+            <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Incluir datos diarios</span>
           </label>
         </div>
       </div>
@@ -148,7 +148,7 @@
 
       <!-- Tarjetas de resumen -->
       <div v-if="reportsStore.hasData" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="bg-white dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow-sm p-6">
           <div class="flex items-center">
             <div class="flex-shrink-0">
               <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -159,8 +159,8 @@
               </div>
             </div>
             <div class="ml-4">
-              <p class="text-sm font-medium text-gray-500">Total Tickets</p>
-              <p class="text-2xl font-semibold text-gray-900">{{ reportsStore.formatNumber(reportsStore.totalTickets) }}</p>
+              <p class="text-sm font-medium text-gray-500 dark:text-gray-300">Total Tickets</p>
+              <p class="text-2xl font-semibold text-gray-900 dark:text-gray-100">{{ reportsStore.formatNumber(reportsStore.totalTickets) }}</p>
             </div>
           </div>
           <div class="mt-4">
@@ -168,7 +168,7 @@
           </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="bg-white dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow-sm p-6">
           <div class="flex items-center">
             <div class="flex-shrink-0">
               <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
@@ -178,8 +178,8 @@
               </div>
             </div>
             <div class="ml-4">
-              <p class="text-sm font-medium text-gray-500">Total Pedazos</p>
-              <p class="text-2xl font-semibold text-gray-900">{{ reportsStore.formatNumber(reportsStore.totalPieces) }}</p>
+              <p class="text-sm font-medium text-gray-500 dark:text-gray-300">Total Pedazos</p>
+              <p class="text-2xl font-semibold text-gray-900 dark:text-gray-100">{{ reportsStore.formatNumber(reportsStore.totalPieces) }}</p>
             </div>
           </div>
           <div class="mt-4">
@@ -187,7 +187,7 @@
           </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="bg-white dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow-sm p-6">
           <div class="flex items-center">
             <div class="flex-shrink-0">
               <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
@@ -197,19 +197,19 @@
               </div>
             </div>
             <div class="ml-4">
-              <p class="text-sm font-medium text-gray-500">Estado Cache</p>
-              <p class="text-2xl font-semibold text-gray-900">{{ reportsStore.isCached ? 'Activo' : 'Inactivo' }}</p>
+              <p class="text-sm font-medium text-gray-500 dark:text-gray-300">Estado Cache</p>
+              <p class="text-2xl font-semibold text-gray-900 dark:text-gray-100">{{ reportsStore.isCached ? 'Activo' : 'Inactivo' }}</p>
             </div>
           </div>
           <div class="mt-4">
             <span v-if="reportsStore.isCached" class="text-sm text-green-600 font-medium">
               {{ reportsStore.getCacheAge() }}
             </span>
-            <span v-else class="text-sm text-gray-600 font-medium">Sin cache</span>
+            <span v-else class="text-sm text-gray-600 dark:text-gray-400 font-medium">Sin cache</span>
           </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="bg-white dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow-sm p-6">
           <div class="flex items-center">
             <div class="flex-shrink-0">
               <div class="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
@@ -219,8 +219,8 @@
               </div>
             </div>
             <div class="ml-4">
-              <p class="text-sm font-medium text-gray-500">Páginas</p>
-              <p class="text-2xl font-semibold text-gray-900">{{ reportsStore.pagination.total_pages || 1 }}</p>
+              <p class="text-sm font-medium text-gray-500 dark:text-gray-300">Páginas</p>
+              <p class="text-2xl font-semibold text-gray-900 dark:text-gray-100">{{ reportsStore.pagination.total_pages || 1 }}</p>
             </div>
           </div>
           <div class="mt-4">
@@ -230,16 +230,16 @@
       </div>
 
       <!-- Tabla de reportes -->
-      <div v-if="reportsStore.hasData" class="bg-white rounded-lg shadow-sm overflow-hidden mb-6">
-        <div class="px-6 py-4 border-b border-gray-200">
-          <h3 class="text-lg font-medium text-gray-900">Reporte Detallado</h3>
-          <p class="text-sm text-gray-500 mt-1">
+      <div v-if="reportsStore.hasData" class="bg-white dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden mb-6">
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Reporte Detallado</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-300 mt-1">
             Agrupado por: <span class="font-medium">{{ groupBy === 'zone' ? 'Zona' : groupBy === 'draw_type' ? 'Tipo de Sorteo' : 'Usuario' }}</span>
           </p>
         </div>
         <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
+          <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead class="bg-gray-50 dark:bg-gray-900">
               <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   {{ groupBy === 'zone' ? 'Zona' : groupBy === 'draw_type' ? 'Tipo de Sorteo' : 'Usuario' }}
@@ -252,15 +252,15 @@
                 </th>
               </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-              <tr v-for="report in reportsStore.reports" :key="report.group" class="hover:bg-gray-50">
+            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              <tr v-for="report in reportsStore.reports" :key="report.group" class="hover:bg-gray-50 dark:hover:bg-gray-700">
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="text-sm font-medium text-gray-900">{{ report.group || 'Sin nombre' }}</div>
+                  <div class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ report.group || 'Sin nombre' }}</div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                   {{ reportsStore.formatNumber(report.total_tickets) }}
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                   {{ reportsStore.formatNumber(report.total_pieces) }}
                 </td>
               </tr>
@@ -270,7 +270,7 @@
       </div>
 
       <!-- Paginación -->
-      <div v-if="reportsStore.pagination.total_pages > 1" class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 rounded-lg">
+      <div v-if="reportsStore.pagination.total_pages > 1" class="bg-white dark:bg-gray-800 px-4 py-3 flex items-center justify-between border-t border-gray-200 dark:border-gray-700 sm:px-6 rounded-lg">
         <div class="flex-1 flex justify-between sm:hidden">
           <button 
             @click="previousPage"
@@ -289,7 +289,7 @@
         </div>
         <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
           <div>
-            <p class="text-sm text-gray-700">
+            <p class="text-sm text-gray-700 dark:text-gray-300">
               Mostrando <span class="font-medium">{{ reportsStore.pagination.page || 1 }}</span> de 
               <span class="font-medium">{{ reportsStore.pagination.total_pages || 1 }}</span> páginas
             </p>

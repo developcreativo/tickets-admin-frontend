@@ -1,10 +1,10 @@
 <template>
-  <div class="dashboard-view">
+  <div class="dashboard-view min-h-screen bg-gray-50 dark:bg-gray-900">
     <div class="container mx-auto px-4 py-8">
       <!-- Header del Dashboard -->
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">Dashboard</h1>
-        <p class="text-gray-600">Vista general del sistema de emisión de tickets</p>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">Dashboard</h1>
+        <p class="text-gray-600 dark:text-gray-300">Vista general del sistema de emisión de tickets</p>
         <div class="flex items-center space-x-4 mt-4">
           <button 
             @click="refreshDashboard"
@@ -39,7 +39,7 @@
       <!-- Tarjetas de estadísticas principales -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <!-- Total de Tickets -->
-        <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-blue-500">
+        <div class="bg-white dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow-sm p-6 border-l-4 border-blue-500">
           <div class="flex items-center">
             <div class="flex-shrink-0">
               <svg class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -47,20 +47,20 @@
               </svg>
             </div>
             <div class="ml-4">
-              <p class="text-sm font-medium text-gray-500">Total Tickets</p>
-              <p class="text-2xl font-semibold text-gray-900">{{ stats.totalTickets.toLocaleString() }}</p>
+              <p class="text-sm font-medium text-gray-500 dark:text-gray-300">Total Tickets</p>
+              <p class="text-2xl font-semibold text-gray-900 dark:text-gray-100">{{ stats.totalTickets.toLocaleString() }}</p>
               <div class="flex items-center mt-1">
                 <span :class="stats.ticketsGrowth >= 0 ? 'text-green-600' : 'text-red-600'" class="text-sm font-medium">
                   {{ stats.ticketsGrowth >= 0 ? '+' : '' }}{{ stats.ticketsGrowth }}%
                 </span>
-                <span class="text-gray-400 text-sm ml-1">vs mes anterior</span>
+                <span class="text-gray-400 dark:text-gray-400 text-sm ml-1">vs mes anterior</span>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Total de Piezas -->
-        <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-green-500">
+        <div class="bg-white dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow-sm p-6 border-l-4 border-green-500">
         <div class="flex items-center">
           <div class="flex-shrink-0">
               <svg class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -68,20 +68,20 @@
               </svg>
             </div>
             <div class="ml-4">
-              <p class="text-sm font-medium text-gray-500">Total Piezas</p>
-              <p class="text-2xl font-semibold text-gray-900">{{ stats.totalPieces.toLocaleString() }}</p>
+              <p class="text-sm font-medium text-gray-500 dark:text-gray-300">Total Piezas</p>
+              <p class="text-2xl font-semibold text-gray-900 dark:text-gray-100">{{ stats.totalPieces.toLocaleString() }}</p>
               <div class="flex items-center mt-1">
                 <span :class="stats.piecesGrowth >= 0 ? 'text-green-600' : 'text-red-600'" class="text-sm font-medium">
                   {{ stats.piecesGrowth >= 0 ? '+' : '' }}{{ stats.piecesGrowth }}%
                 </span>
-                <span class="text-gray-400 text-sm ml-1">vs mes anterior</span>
+                <span class="text-gray-400 dark:text-gray-400 text-sm ml-1">vs mes anterior</span>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Usuarios Activos -->
-        <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-purple-500">
+        <div class="bg-white dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow-sm p-6 border-l-4 border-purple-500">
           <div class="flex items-center">
             <div class="flex-shrink-0">
               <svg class="h-8 w-8 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -89,8 +89,8 @@
               </svg>
           </div>
           <div class="ml-4">
-              <p class="text-sm font-medium text-gray-500">Usuarios Activos</p>
-              <p class="text-2xl font-semibold text-gray-900">{{ stats.activeUsers }}</p>
+              <p class="text-sm font-medium text-gray-500 dark:text-gray-300">Usuarios Activos</p>
+              <p class="text-2xl font-semibold text-gray-900 dark:text-gray-100">{{ stats.activeUsers }}</p>
               <div class="flex items-center mt-1">
                 <span :class="stats.usersGrowth >= 0 ? 'text-green-600' : 'text-red-600'" class="text-sm font-medium">
                   {{ stats.usersGrowth >= 0 ? '+' : '' }}{{ stats.usersGrowth }}%
@@ -102,7 +102,7 @@
         </div>
 
         <!-- Zonas Activas -->
-        <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-orange-500">
+        <div class="bg-white dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow-sm p-6 border-l-4 border-orange-500">
           <div class="flex items-center">
             <div class="flex-shrink-0">
               <svg class="h-8 w-8 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -111,8 +111,8 @@
               </svg>
             </div>
             <div class="ml-4">
-              <p class="text-sm font-medium text-gray-500">Zonas Activas</p>
-              <p class="text-2xl font-semibold text-gray-900">{{ stats.activeZones }}/{{ stats.totalZones }}</p>
+              <p class="text-sm font-medium text-gray-500 dark:text-gray-300">Zonas Activas</p>
+              <p class="text-2xl font-semibold text-gray-900 dark:text-gray-100">{{ stats.activeZones }}/{{ stats.totalZones }}</p>
               <div class="flex items-center mt-1">
                 <span class="text-sm text-gray-500">
                   {{ Math.round((stats.activeZones / stats.totalZones) * 100) }}% activas
@@ -126,20 +126,20 @@
       <!-- Gráficos y visualizaciones -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <!-- Gráfico de tickets por zona -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="bg-white dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow-sm p-6">
           <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-medium text-gray-900">Tickets por Zona</h3>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Tickets por Zona</h3>
             <div class="flex space-x-2">
               <button 
                 @click="chartPeriod = 'week'"
-                :class="chartPeriod === 'week' ? 'bg-blue-100 text-blue-700' : 'text-gray-500 hover:text-gray-700'"
+                :class="chartPeriod === 'week' ? 'bg-blue-100 text-blue-700' : 'text-gray-500 dark:text-gray-300 hover:text-gray-200'"
                 class="px-3 py-1 text-sm font-medium rounded-md transition-colors"
               >
                 Semana
               </button>
               <button 
                 @click="chartPeriod = 'month'"
-                :class="chartPeriod === 'month' ? 'bg-blue-100 text-blue-700' : 'text-gray-500 hover:text-gray-700'"
+                :class="chartPeriod === 'month' ? 'bg-blue-100 text-blue-700' : 'text-gray-500 dark:text-gray-300 hover:text-gray-200'"
                 class="px-3 py-1 text-sm font-medium rounded-md transition-colors"
               >
                 Mes
@@ -152,20 +152,20 @@
         </div>
 
         <!-- Gráfico de tendencia de ventas -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="bg-white dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow-sm p-6">
           <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-medium text-gray-900">Tendencia de Ventas</h3>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Tendencia de Ventas</h3>
             <div class="flex space-x-2">
               <button 
                 @click="trendPeriod = '7d'"
-                :class="trendPeriod === '7d' ? 'bg-blue-100 text-blue-700' : 'text-gray-500 hover:text-gray-700'"
+                :class="trendPeriod === '7d' ? 'bg-blue-100 text-blue-700' : 'text-gray-500 dark:text-gray-300 hover:text-gray-200'"
                 class="px-3 py-1 text-sm font-medium rounded-md transition-colors"
               >
                 7 días
               </button>
               <button 
                 @click="trendPeriod = '30d'"
-                :class="trendPeriod === '30d' ? 'bg-blue-100 text-blue-700' : 'text-gray-500 hover:text-gray-700'"
+                :class="trendPeriod === '30d' ? 'bg-blue-100 text-blue-700' : 'text-gray-500 dark:text-gray-300 hover:text-gray-200'"
                 class="px-3 py-1 text-sm font-medium rounded-md transition-colors"
               >
                 30 días
@@ -181,9 +181,9 @@
       <!-- Nuevos gráficos de auditoría y exportación -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <!-- Gráfico de actividad del sistema -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="bg-white dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow-sm p-6">
           <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-medium text-gray-900">Actividad del Sistema</h3>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Actividad del Sistema</h3>
             <div class="flex space-x-2">
               <button 
                 @click="auditPeriod = '1h'"
@@ -207,9 +207,9 @@
         </div>
 
         <!-- Gráfico de exportaciones -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="bg-white dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow-sm p-6">
           <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-medium text-gray-900">Exportaciones por Formato</h3>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Exportaciones por Formato</h3>
             <div class="flex space-x-2">
               <button 
                 @click="exportPeriod = '7d'"
@@ -236,51 +236,51 @@
       <!-- Actividad reciente y métricas adicionales -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Actividad reciente -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h3 class="text-lg font-medium text-gray-900 mb-4">Actividad Reciente</h3>
+        <div class="bg-white dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow-sm p-6">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Actividad Reciente</h3>
           <div class="space-y-3">
             <div v-for="activity in recentActivity" :key="activity.id" class="flex items-start space-x-3">
           <div class="flex-shrink-0">
                 <div class="w-2 h-2 rounded-full mt-2" :class="getActivityColor(activity.type)"></div>
               </div>
               <div class="flex-1 min-w-0">
-                <p class="text-sm font-medium text-gray-900">{{ activity.title }}</p>
-                <p class="text-sm text-gray-500">{{ activity.description }}</p>
-                <p class="text-xs text-gray-400">{{ formatTimeAgo(activity.timestamp) }}</p>
+                <p class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ activity.title }}</p>
+                <p class="text-sm text-gray-500 dark:text-gray-300">{{ activity.description }}</p>
+                <p class="text-xs text-gray-400 dark:text-gray-400">{{ formatTimeAgo(activity.timestamp) }}</p>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Top zonas -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h3 class="text-lg font-medium text-gray-900 mb-4">Top Zonas</h3>
+        <div class="bg-white dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow-sm p-6">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Top Zonas</h3>
           <div class="space-y-3">
             <div v-for="zone in topZones" :key="zone.id" class="flex items-center justify-between">
-              <span class="text-sm font-medium text-gray-900">{{ zone.name }}</span>
+              <span class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ zone.name }}</span>
               <div class="flex items-center space-x-2">
-                <div class="w-20 bg-gray-200 rounded-full h-2">
+                <div class="w-20 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                   <div 
                     class="bg-blue-600 h-2 rounded-full" 
                     :style="{ width: `${(zone.tickets / maxZoneTickets) * 100}%` }"
                   ></div>
                 </div>
-                <span class="text-sm text-gray-500 w-8 text-right">{{ zone.tickets }}</span>
+                <span class="text-sm text-gray-500 dark:text-gray-300 w-8 text-right">{{ zone.tickets }}</span>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Métricas de rendimiento -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h3 class="text-lg font-medium text-gray-900 mb-4">Rendimiento</h3>
+        <div class="bg-white dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow-sm p-6">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Rendimiento</h3>
           <div class="space-y-4">
             <div>
               <div class="flex items-center justify-between text-sm">
-                <span class="text-gray-500">Tickets/hora</span>
-                <span class="font-medium text-gray-900">{{ performance.ticketsPerHour }}</span>
+                <span class="text-gray-500 dark:text-gray-300">Tickets/hora</span>
+                <span class="font-medium text-gray-900 dark:text-gray-100">{{ performance.ticketsPerHour }}</span>
               </div>
-              <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
+              <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-1">
                 <div 
                   class="bg-green-600 h-2 rounded-full" 
                   :style="{ width: `${Math.min((performance.ticketsPerHour / 50) * 100, 100)}%` }"
@@ -289,10 +289,10 @@
             </div>
             <div>
               <div class="flex items-center justify-between text-sm">
-                <span class="text-gray-500">Piezas/ticket</span>
-                <span class="font-medium text-gray-900">{{ performance.avgPiecesPerTicket }}</span>
+                <span class="text-gray-500 dark:text-gray-300">Piezas/ticket</span>
+                <span class="font-medium text-gray-900 dark:text-gray-100">{{ performance.avgPiecesPerTicket }}</span>
               </div>
-              <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
+              <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-1">
                 <div 
                   class="bg-blue-600 h-2 rounded-full" 
                   :style="{ width: `${Math.min((performance.avgPiecesPerTicket / 10) * 100, 100)}%` }"
@@ -301,10 +301,10 @@
             </div>
             <div>
               <div class="flex items-center justify-between text-sm">
-                <span class="text-gray-500">Tiempo respuesta</span>
-                <span class="font-medium text-gray-900">{{ performance.responseTime }}ms</span>
+                <span class="text-gray-500 dark:text-gray-300">Tiempo respuesta</span>
+                <span class="font-medium text-gray-900 dark:text-gray-100">{{ performance.responseTime }}ms</span>
               </div>
-              <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
+              <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-1">
                 <div 
                   class="bg-yellow-600 h-2 rounded-full" 
                   :style="{ width: `${Math.min((performance.responseTime / 200) * 100, 100)}%` }"
@@ -329,8 +329,8 @@
 
       <!-- Alertas y notificaciones críticas -->
       <div v-if="criticalAlerts.length > 0" class="mt-8">
-        <h3 class="text-lg font-medium text-gray-900 mb-4">Alertas Críticas</h3>
-        <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Alertas Críticas</h3>
+        <div class="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg p-4">
           <div class="flex">
             <div class="flex-shrink-0">
               <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">

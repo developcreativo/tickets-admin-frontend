@@ -536,3 +536,71 @@ body {
 .pagination-item.disabled {
     @apply opacity-50 cursor-not-allowed;
 }
+
+/* Dark mode overrides for common Tailwind utilities used across the app */
+html.dark body {
+    background-color: var(--color-background);
+    color: var(--color-text);
+}
+
+html.dark .bg-white {
+    background-color: #1F2937 !important;
+}
+
+html.dark .bg-gray-50 {
+    background-color: #111827 !important;
+}
+
+html.dark .text-gray-900 {
+    color: #F9FAFB !important;
+}
+
+html.dark .text-gray-700 {
+    color: #E5E7EB !important;
+}
+
+html.dark .text-gray-600 {
+    color: #D1D5DB !important;
+}
+
+html.dark .text-gray-500 {
+    color: #9CA3AF !important;
+}
+
+html.dark .border-gray-200 {
+    border-color: #374151 !important;
+}
+
+html.dark .divide-gray-200> :not([hidden])~ :not([hidden]) {
+    border-color: #374151 !important;
+}
+
+html.dark .bg-blue-50 {
+    background-color: #0B1220 !important;
+}
+
+html.dark .bg-gray-100 {
+    background-color: #1F2937 !important;
+}
+
+/* Cards, tables, dropdowns */
+html.dark .card {
+    background-color: #1F2937 !important;
+    border-color: #374151 !important;
+}
+
+html.dark .table-header {
+    background-color: #0F172A !important;
+}
+
+html.dark .table-body {
+    background-color: #111827 !important;
+}
+
+html.dark .dropdown {
+    background-color: #111827 !important;
+}
+
+html.dark .dropdown-item {
+    color: #E5E7EB !important;
+}

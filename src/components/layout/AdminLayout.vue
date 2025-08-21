@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
     <!-- Mobile overlay -->
     <div v-if="sidebarOpen" 
          class="fixed inset-0 z-40 bg-gray-600 bg-opacity-75 lg:hidden"
@@ -7,10 +7,10 @@
     </div>
     
     <!-- Sidebar -->
-    <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0"
+    <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 dark:text-gray-100 shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0"
          :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }">
-      <div class="flex items-center justify-between h-16 px-6 border-b border-gray-200">
-        <h1 class="text-xl font-bold text-gray-900">Admin Dashboard</h1>
+      <div class="flex items-center justify-between h-16 px-6 border-b border-gray-200 dark:border-gray-700">
+        <h1 class="text-xl font-bold text-gray-900 dark:text-gray-100">Admin Dashboard</h1>
         <button @click="sidebarOpen = false" class="lg:hidden">
           <XMarkIcon class="w-6 h-6 text-gray-500" />
         </button>
@@ -25,7 +25,7 @@
           :class="[
             $route.path === item.href
               ? 'bg-primary-100 text-primary-700 border-r-2 border-primary-600'
-              : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+              : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100'
           ]"
         >
           <component :is="item.icon" class="w-5 h-5 mr-3" />
@@ -34,14 +34,14 @@
       </nav>
       
       <!-- Footer del sidebar -->
-      <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
+      <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700">
         <div class="flex items-center space-x-3">
           <div class="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center">
             <span class="text-sm font-medium text-white">{{ userInitials }}</span>
           </div>
           <div class="flex-1 min-w-0">
-            <p class="text-sm font-medium text-gray-900 truncate">{{ authStore.user?.username }}</p>
-            <p class="text-xs text-gray-500">{{ authStore.user?.role || 'Usuario' }}</p>
+            <p class="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{{ authStore.user?.username }}</p>
+            <p class="text-xs text-gray-500 dark:text-gray-300">{{ authStore.user?.role || 'Usuario' }}</p>
           </div>
         </div>
       </div>
@@ -50,13 +50,13 @@
     <!-- Main content -->
     <div class="lg:pl-64 transition-all duration-300">
       <!-- Header -->
-      <header class="bg-white shadow-sm border-b border-gray-200">
+      <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
         <div class="flex items-center justify-between h-16 px-6">
           <div class="flex items-center">
             <button @click="sidebarOpen = true" class="lg:hidden mr-4">
               <Bars3Icon class="w-6 h-6 text-gray-500" />
             </button>
-            <h2 class="text-lg font-medium text-gray-900">{{ currentPageTitle }}</h2>
+            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ currentPageTitle }}</h2>
           </div>
           
           <div class="flex items-center space-x-4">
@@ -75,11 +75,11 @@
                 <ChevronDownIcon class="w-4 h-4 text-gray-400" />
               </button>
               
-              <div v-if="userMenuOpen" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1">
-                <button @click="goToSettings" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+              <div v-if="userMenuOpen" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1">
+                <button @click="goToSettings" class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
                   Configuración
                 </button>
-                <button @click="logout" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                <button @click="logout" class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
                   Cerrar sesión
                 </button>
               </div>

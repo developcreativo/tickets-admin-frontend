@@ -1,8 +1,8 @@
 <template>
-  <div class="users-view">
+  <div class="users-view min-h-screen bg-gray-50 dark:bg-gray-900">
     <div class="container mx-auto px-4 py-8">
       <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold text-gray-900">Gestión de Usuarios</h1>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Gestión de Usuarios</h1>
         <button 
           @click="showAddModal = true"
           class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
@@ -12,22 +12,22 @@
       </div>
 
       <!-- Filtros -->
-      <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+      <div class="bg-white dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow-sm p-4 mb-6">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Buscar</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Buscar</label>
             <input 
               v-model="searchQuery"
               type="text" 
               placeholder="Buscar usuarios..."
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Rol</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Rol</label>
             <select 
               v-model="selectedRole"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Todos los roles</option>
               <option value="ADMIN">Administrador</option>
@@ -36,10 +36,10 @@
             </select>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Estado</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Estado</label>
             <select 
               v-model="selectedStatus"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Todos los estados</option>
               <option value="active">Activo</option>
@@ -86,12 +86,12 @@
       </div>
 
       <!-- Tabla de usuarios -->
-      <div v-else class="bg-white rounded-lg shadow-sm overflow-hidden">
+      <div v-else class="bg-white dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
+          <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead class="bg-gray-50 dark:bg-gray-900">
               <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   Usuario
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -114,33 +114,33 @@
                 </th>
               </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-              <tr v-if="paginatedUsers.length === 0" class="hover:bg-gray-50">
+            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              <tr v-if="paginatedUsers.length === 0" class="hover:bg-gray-50 dark:hover:bg-gray-700">
                 <td colspan="7" class="px-6 py-8 text-center">
                   <div class="text-gray-500">
                     <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
                     </svg>
-                    <h3 class="mt-2 text-sm font-medium text-gray-900">No se encontraron usuarios</h3>
-                    <p class="mt-1 text-sm text-gray-500">
+                    <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">No se encontraron usuarios</h3>
+                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">
                       {{ searchQuery ? 'Intenta con otros términos de búsqueda.' : 'No hay usuarios registrados.' }}
                     </p>
                   </div>
                 </td>
               </tr>
-              <tr v-for="user in paginatedUsers" :key="user.id" class="hover:bg-gray-50">
+              <tr v-for="user in paginatedUsers" :key="user.id" class="hover:bg-gray-50 dark:hover:bg-gray-700">
                 <td class="px-6 py-4 whitespace-nowrap">
                   <div class="flex items-center">
                     <div class="flex-shrink-0 h-10 w-10 bg-primary-100 rounded-lg flex items-center justify-center">
                       <span class="text-primary-600 font-medium">{{ getUserFullName(user).charAt(0) }}</span>
                     </div>
                     <div class="ml-4">
-                      <div class="text-sm font-medium text-gray-900">{{ getUserFullName(user) }}</div>
-                      <div class="text-sm text-gray-500">{{ user.username }}</div>
+                      <div class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ getUserFullName(user) }}</div>
+                      <div class="text-sm text-gray-500 dark:text-gray-300">{{ user.username }}</div>
                     </div>
                   </div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                   {{ user.email }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
@@ -149,7 +149,7 @@
                     {{ getRoleText(user.role) }}
                   </span>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                   {{ getZoneName(user.zone) }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
@@ -158,7 +158,7 @@
                     {{ getStatusText(user.is_active) }}
                   </span>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
                   {{ formatDate(user.date_joined) }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -188,7 +188,7 @@
       </div>
 
       <!-- Paginación -->
-      <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 mt-4 rounded-lg">
+      <div class="bg-white dark:bg-gray-800 px-4 py-3 flex items-center justify-between border-t border-gray-200 dark:border-gray-700 sm:px-6 mt-4 rounded-lg">
         <div class="flex-1 flex justify-between sm:hidden">
           <button 
             @click="previousPage"
@@ -207,7 +207,7 @@
         </div>
         <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
           <div>
-            <p class="text-sm text-gray-700">
+            <p class="text-sm text-gray-700 dark:text-gray-300">
               Mostrando <span class="font-medium">{{ startIndex + 1 }}</span> a 
               <span class="font-medium">{{ endIndex }}</span> de 
               <span class="font-medium">{{ totalUsers }}</span> usuarios
@@ -218,7 +218,7 @@
               <button 
                 @click="previousPage"
                 :disabled="currentPage === 1"
-                class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+                class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
               >
                 <span class="sr-only">Anterior</span>
                 <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -233,7 +233,7 @@
                   'relative inline-flex items-center px-4 py-2 border text-sm font-medium',
                   page === currentPage 
                     ? 'z-10 bg-blue-50 border-blue-500 text-blue-600' 
-                    : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
+                    : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                 ]"
               >
                 {{ page }}
@@ -241,7 +241,7 @@
               <button 
                 @click="nextPage"
                 :disabled="currentPage === totalPages"
-                class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+                class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
               >
                 <span class="sr-only">Siguiente</span>
                 <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">

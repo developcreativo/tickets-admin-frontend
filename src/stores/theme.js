@@ -354,9 +354,14 @@ export const useThemeStore = defineStore('theme', () => {
             root.style.setProperty(property, value)
         })
 
-        // Aplicar clases de tema
+        // Aplicar clases de tema + dark mode para Tailwind
         root.className = root.className.replace(/theme-\w+/g, '')
         root.classList.add(`theme-${currentTheme.value}`)
+        if (currentTheme.value === 'dark') {
+            root.classList.add('dark')
+        } else {
+            root.classList.remove('dark')
+        }
 
         // Aplicar modo compacto
         if (compactMode.value) {

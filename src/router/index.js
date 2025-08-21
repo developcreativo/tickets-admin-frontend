@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import AdminLayout from '../components/layout/AdminLayout.vue'
 
 const routes = [
     {
@@ -10,39 +11,40 @@ const routes = [
     },
     {
         path: '/',
-        name: 'Dashboard',
-        component: () => import('../views/DashboardView.vue'),
-        meta: { requiresAuth: true }
-    },
-    {
-        path: '/catalog',
-        name: 'Catalog',
-        component: () => import('../views/CatalogView.vue'),
-        meta: { requiresAuth: true }
-    },
-    {
-        path: '/users',
-        name: 'Users',
-        component: () => import('../views/UsersView.vue'),
-        meta: { requiresAuth: true }
-    },
-    {
-        path: '/reports',
-        name: 'Reports',
-        component: () => import('../views/ReportsView.vue'),
-        meta: { requiresAuth: true }
-    },
-    {
-        path: '/tickets',
-        name: 'Tickets',
-        component: () => import('../views/TicketsView.vue'),
-        meta: { requiresAuth: true }
-    },
-    {
-        path: '/settings',
-        name: 'Settings',
-        component: () => import('../views/SettingsView.vue'),
-        meta: { requiresAuth: true }
+        component: AdminLayout,
+        meta: { requiresAuth: true },
+        children: [
+            {
+                path: '',
+                name: 'Dashboard',
+                component: () => import('../views/DashboardView.vue')
+            },
+            {
+                path: 'catalog',
+                name: 'Catalog',
+                component: () => import('../views/CatalogView.vue')
+            },
+            {
+                path: 'users',
+                name: 'Users',
+                component: () => import('../views/UsersView.vue')
+            },
+            {
+                path: 'reports',
+                name: 'Reports',
+                component: () => import('../views/ReportsView.vue')
+            },
+            {
+                path: 'tickets',
+                name: 'Tickets',
+                component: () => import('../views/TicketsView.vue')
+            },
+            {
+                path: 'settings',
+                name: 'Settings',
+                component: () => import('../views/SettingsView.vue')
+            }
+        ]
     }
 ]
 

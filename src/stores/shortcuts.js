@@ -601,6 +601,7 @@ export const useShortcutsStore = defineStore('shortcuts', () => {
 
         // Acciones principales
         initializeShortcuts,
+        loadShortcuts: initializeShortcuts,
         saveShortcuts,
         updateShortcut,
         toggleShortcut,

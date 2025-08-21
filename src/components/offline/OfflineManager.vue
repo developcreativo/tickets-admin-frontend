@@ -1,11 +1,11 @@
 <template>
-  <div class="offline-manager">
+  <div class="offline-manager min-h-screen bg-gray-50 dark:bg-gray-900">
     <!-- Header -->
-    <div class="bg-white border-b border-gray-200 px-6 py-4">
+    <div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
       <div class="flex items-center justify-between">
         <div>
-          <h2 class="text-lg font-medium text-gray-900">Gestión Offline</h2>
-          <p class="text-sm text-gray-500">Gestiona el modo offline y la sincronización de datos</p>
+          <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Gestión Offline</h2>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Gestiona el modo offline y la sincronización de datos</p>
         </div>
         <div class="flex items-center space-x-3">
           <div class="flex items-center space-x-2">
@@ -15,16 +15,16 @@
                 isOnline ? 'bg-green-500' : 'bg-red-500'
               ]"
             ></div>
-            <span class="text-sm text-gray-600">
+            <span class="text-sm text-gray-600 dark:text-gray-400">
               {{ isOnline ? 'En línea' : 'Sin conexión' }}
             </span>
           </div>
           <button
             @click="syncAllData"
             :disabled="!isOnline || isSyncing"
-            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 dark:bg-blue-800 hover:bg-blue-700 dark:hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <svg v-if="isSyncing" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <svg v-if="isSyncing" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white dark:text-gray-100" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
@@ -39,14 +39,14 @@
 
     <div class="flex">
       <!-- Sidebar de estado -->
-      <div class="w-80 bg-gray-50 border-r border-gray-200 p-6">
+      <div class="w-80 bg-gray-50 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 p-6">
         <!-- Estado de conexión -->
         <div class="mb-6">
-          <h3 class="text-sm font-medium text-gray-900 mb-4">Estado de Conexión</h3>
+          <h3 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-4">Estado de Conexión</h3>
           <div class="space-y-3">
-            <div class="bg-white rounded-lg p-4 border border-gray-200">
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
               <div class="flex items-center justify-between">
-                <span class="text-sm font-medium text-gray-700">Conexión a Internet</span>
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Conexión a Internet</span>
                 <span
                   :class="[
                     'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
@@ -56,14 +56,14 @@
                   {{ isOnline ? 'Conectado' : 'Desconectado' }}
                 </span>
               </div>
-              <p class="text-xs text-gray-500 mt-1">
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 Última verificación: {{ lastConnectionCheck }}
               </p>
             </div>
 
-            <div class="bg-white rounded-lg p-4 border border-gray-200">
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
               <div class="flex items-center justify-between">
-                <span class="text-sm font-medium text-gray-700">Backend</span>
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Backend</span>
                 <span
                   :class="[
                     'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
@@ -73,7 +73,7 @@
                   {{ backendStatus === 'online' ? 'Disponible' : 'No disponible' }}
                 </span>
               </div>
-              <p class="text-xs text-gray-500 mt-1">
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 {{ backendStatus === 'online' ? 'Servidor respondiendo' : 'Error de conexión' }}
               </p>
             </div>
@@ -82,15 +82,15 @@
 
         <!-- Configuración offline -->
         <div class="mb-6">
-          <h3 class="text-sm font-medium text-gray-900 mb-4">Configuración Offline</h3>
+          <h3 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-4">Configuración Offline</h3>
           <div class="space-y-3">
             <div class="flex items-center justify-between">
-              <span class="text-sm text-gray-700">Modo Offline</span>
+              <span class="text-sm text-gray-700 dark:text-gray-300">Modo Offline</span>
               <button
                 @click="toggleOfflineMode"
                 :class="[
                   'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
-                  offlineMode ? 'bg-blue-600' : 'bg-gray-200'
+                  offlineMode ? 'bg-blue-600 dark:bg-blue-800' : 'bg-gray-200 dark:bg-gray-700'
                 ]"
               >
                 <span
@@ -103,12 +103,12 @@
             </div>
 
             <div class="flex items-center justify-between">
-              <span class="text-sm text-gray-700">Sincronización Automática</span>
+              <span class="text-sm text-gray-700 dark:text-gray-300">Sincronización Automática</span>
               <button
                 @click="toggleAutoSync"
                 :class="[
                   'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
-                  autoSync ? 'bg-blue-600' : 'bg-gray-200'
+                  autoSync ? 'bg-blue-600 dark:bg-blue-800' : 'bg-gray-200 dark:bg-gray-700'
                 ]"
               >
                 <span
@@ -121,16 +121,16 @@
             </div>
 
             <div class="flex items-center justify-between">
-              <span class="text-sm text-gray-700">Almacenamiento Local</span>
-              <span class="text-sm text-gray-900">{{ storageUsage }}</span>
+              <span class="text-sm text-gray-700 dark:text-gray-300">Almacenamiento Local</span>
+              <span class="text-sm text-gray-900 dark:text-gray-100">{{ storageUsage }}</span>
             </div>
           </div>
         </div>
 
         <!-- Información del sistema -->
         <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h4 class="text-sm font-medium text-blue-800 mb-2">Información del Sistema</h4>
-          <ul class="text-xs text-blue-700 space-y-1">
+          <h4 class="text-sm font-medium text-blue-800 dark:text-blue-200 mb-2">Información del Sistema</h4>
+          <ul class="text-xs text-blue-700 dark:text-blue-200 space-y-1">
             <li>• Los datos se almacenan localmente</li>
             <li>• La sincronización es automática</li>
             <li>• Funciona sin conexión a internet</li>
@@ -143,9 +143,9 @@
       <div class="flex-1 p-6">
         <!-- Resumen de estado -->
         <div class="mb-8">
-          <h3 class="text-lg font-medium text-gray-900 mb-4">Resumen del Estado</h3>
+          <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Resumen del Estado</h3>
           <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-blue-500">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border-l-4 border-blue-500">
               <div class="flex items-center">
                 <div class="flex-shrink-0">
                   <svg class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -153,13 +153,13 @@
                   </svg>
                 </div>
                 <div class="ml-4">
-                  <p class="text-sm font-medium text-gray-500">Datos Locales</p>
-                  <p class="text-2xl font-semibold text-gray-900">{{ localDataCount }}</p>
+                  <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Datos Locales</p>
+                  <p class="text-2xl font-semibold text-gray-900 dark:text-gray-100">{{ localDataCount }}</p>
                 </div>
               </div>
             </div>
 
-            <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-green-500">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border-l-4 border-green-500">
               <div class="flex items-center">
                 <div class="flex-shrink-0">
                   <svg class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -167,13 +167,13 @@
                   </svg>
                 </div>
                 <div class="ml-4">
-                  <p class="text-sm font-medium text-gray-500">Sincronizados</p>
-                  <p class="text-2xl font-semibold text-gray-900">{{ syncedDataCount }}</p>
+                  <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Sincronizados</p>
+                  <p class="text-2xl font-semibold text-gray-900 dark:text-gray-100">{{ syncedDataCount }}</p>
                 </div>
               </div>
             </div>
 
-            <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-yellow-500">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border-l-4 border-yellow-500">
               <div class="flex items-center">
                 <div class="flex-shrink-0">
                   <svg class="h-8 w-8 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -181,13 +181,13 @@
                   </svg>
                 </div>
                 <div class="ml-4">
-                  <p class="text-sm font-medium text-gray-500">Pendientes</p>
-                  <p class="text-2xl font-semibold text-gray-900">{{ pendingDataCount }}</p>
+                  <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Pendientes</p>
+                  <p class="text-2xl font-semibold text-gray-900 dark:text-gray-100">{{ pendingDataCount }}</p>
                 </div>
               </div>
             </div>
 
-            <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-red-500">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border-l-4 border-red-500">
               <div class="flex items-center">
                 <div class="flex-shrink-0">
                   <svg class="h-8 w-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -195,8 +195,8 @@
                   </svg>
                 </div>
                 <div class="ml-4">
-                  <p class="text-sm font-medium text-gray-500">Errores</p>
-                  <p class="text-2xl font-semibold text-gray-900">{{ errorCount }}</p>
+                  <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Errores</p>
+                  <p class="text-2xl font-semibold text-gray-900 dark:text-gray-100">{{ errorCount }}</p>
                 </div>
               </div>
             </div>
@@ -205,9 +205,9 @@
 
         <!-- Cola de sincronización -->
         <div class="mb-8">
-          <h3 class="text-lg font-medium text-gray-900 mb-4">Cola de Sincronización</h3>
-          <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
-            <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Cola de Sincronización</h3>
+          <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-700">
               <div class="grid grid-cols-5 gap-4 text-xs font-medium text-gray-500 uppercase tracking-wider">
                 <div>Tipo</div>
                 <div>Acción</div>
@@ -216,11 +216,11 @@
                 <div>Acciones</div>
               </div>
             </div>
-            <div class="divide-y divide-gray-200">
+            <div class="divide-y divide-gray-200 dark:divide-gray-700">
               <div
                 v-for="item in syncQueue"
                 :key="item.id"
-                class="px-6 py-4 hover:bg-gray-50 transition-colors"
+                class="px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
                 <div class="grid grid-cols-5 gap-4 items-center">
                   <div>
@@ -279,9 +279,9 @@
 
         <!-- Historial de sincronización -->
         <div class="mb-8">
-          <h3 class="text-lg font-medium text-gray-900 mb-4">Historial de Sincronización</h3>
-          <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
-            <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Historial de Sincronización</h3>
+          <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-700">
               <div class="grid grid-cols-4 gap-4 text-xs font-medium text-gray-500 uppercase tracking-wider">
                 <div>Fecha</div>
                 <div>Tipo</div>
@@ -289,11 +289,11 @@
                 <div>Duración</div>
               </div>
             </div>
-            <div class="divide-y divide-gray-200">
+            <div class="divide-y divide-gray-200 dark:divide-gray-700">
               <div
                 v-for="sync in syncHistory"
                 :key="sync.id"
-                class="px-6 py-4 hover:bg-gray-50 transition-colors"
+                class="px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
                 <div class="grid grid-cols-4 gap-4 items-center">
                   <div>
@@ -323,11 +323,11 @@
 
         <!-- Configuración avanzada -->
         <div>
-          <h3 class="text-lg font-medium text-gray-900 mb-4">Configuración Avanzada</h3>
-          <div class="bg-white rounded-lg border border-gray-200 p-6">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Configuración Avanzada</h3>
+          <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Intervalo de Sincronización (minutos)
                 </label>
                 <input
@@ -335,12 +335,12 @@
                   type="number"
                   min="1"
                   max="60"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm"
                   @change="updateSyncInterval"
                 />
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Tiempo de espera (segundos)
                 </label>
                 <input
@@ -348,12 +348,12 @@
                   type="number"
                   min="5"
                   max="60"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm"
                   @change="updateSyncTimeout"
                 />
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Tamaño máximo de cola
                 </label>
                 <input
@@ -361,12 +361,12 @@
                   type="number"
                   min="10"
                   max="1000"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm"
                   @change="updateMaxQueueSize"
                 />
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Intentos de reintento
                 </label>
                 <input
@@ -374,7 +374,7 @@
                   type="number"
                   min="1"
                   max="10"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm"
                   @change="updateMaxRetries"
                 />
               </div>
@@ -382,7 +382,7 @@
             <div class="mt-6">
               <button
                 @click="clearSyncHistory"
-                class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-700 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
                 <svg class="-ml-1 mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -679,7 +679,6 @@ onUnmounted(() => {
 <style scoped>
 .offline-manager {
   min-height: 100vh;
-  background-color: #f9fafb;
 }
 
 /* Transiciones suaves */

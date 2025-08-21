@@ -1,8 +1,8 @@
 <template>
-  <div class="tickets-view">
+  <div class="tickets-view min-h-screen bg-gray-50 dark:bg-gray-900">
     <div class="container mx-auto px-4 py-8">
       <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold text-gray-900">Gestión de Tickets</h1>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Gestión de Tickets</h1>
         <div class="flex space-x-3">
           <button 
             @click="showCreateModal = true"
@@ -20,13 +20,13 @@
       </div>
 
       <!-- Filtros -->
-      <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+      <div class="bg-white dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow-sm p-4 mb-6">
         <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Zona</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Zona</label>
             <select 
               v-model="filters.zone"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Todas las zonas</option>
               <option v-for="zone in catalogStore.zones" :key="zone.id" :value="zone.id">
@@ -35,10 +35,10 @@
             </select>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de Sorteo</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tipo de Sorteo</label>
             <select 
               v-model="filters.drawType"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Todos los tipos</option>
               <option v-for="drawType in catalogStore.drawTypes" :key="drawType.id" :value="drawType.id">
@@ -47,10 +47,10 @@
             </select>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Usuario</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Usuario</label>
             <select 
               v-model="filters.user"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Todos los usuarios</option>
               <option v-for="user in usersStore.users" :key="user.id" :value="user.id">
@@ -59,19 +59,19 @@
             </select>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Fecha Inicio</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Fecha Inicio</label>
             <input 
               v-model="filters.startDate"
               type="date" 
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Fecha Fin</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Fecha Fin</label>
             <input 
               v-model="filters.endDate"
               type="date" 
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
           </div>
         </div>
@@ -84,7 +84,7 @@
           </button>
           <button 
             @click="clearFilters"
-            class="text-gray-600 hover:text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors"
+            class="text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-200 font-medium py-2 px-4 rounded-lg transition-colors"
           >
             Limpiar Filtros
           </button>
@@ -130,16 +130,16 @@
       </div>
 
       <!-- Tabla de tickets -->
-      <div v-if="filteredTickets.length > 0" class="bg-white rounded-lg shadow-sm overflow-hidden mb-6">
-        <div class="px-6 py-4 border-b border-gray-200">
-          <h3 class="text-lg font-medium text-gray-900">Tickets de Venta</h3>
-          <p class="text-sm text-gray-500 mt-1">
+      <div v-if="filteredTickets.length > 0" class="bg-white dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden mb-6">
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Tickets de Venta</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-300 mt-1">
             Total: {{ filteredTickets.length }} tickets
           </p>
         </div>
         <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
+          <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead class="bg-gray-50 dark:bg-gray-900">
               <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Ticket
@@ -167,29 +167,29 @@
                 </th>
               </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-              <tr v-for="ticket in paginatedTickets" :key="ticket.id" class="hover:bg-gray-50">
+            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              <tr v-for="ticket in paginatedTickets" :key="ticket.id" class="hover:bg-gray-50 dark:hover:bg-gray-700">
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="text-sm font-medium text-gray-900">
+                  <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
                     {{ ticketsStore.formatTicketNumber(ticket) }}
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="text-sm text-gray-900">{{ getZoneName(ticket.zone) }}</div>
+                  <div class="text-sm text-gray-900 dark:text-gray-100">{{ getZoneName(ticket.zone) }}</div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="text-sm text-gray-900">{{ getDrawTypeName(ticket.draw_type) }}</div>
+                  <div class="text-sm text-gray-900 dark:text-gray-100">{{ getDrawTypeName(ticket.draw_type) }}</div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="text-sm text-gray-900">{{ getUserName(ticket.user) }}</div>
+                  <div class="text-sm text-gray-900 dark:text-gray-100">{{ getUserName(ticket.user) }}</div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="text-sm text-gray-900">{{ getTicketSummary(ticket).totalNumbers }}</div>
+                  <div class="text-sm text-gray-900 dark:text-gray-100">{{ getTicketSummary(ticket).totalNumbers }}</div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="text-sm text-gray-900">{{ getTicketSummary(ticket).totalPieces }}</div>
+                  <div class="text-sm text-gray-900 dark:text-gray-100">{{ getTicketSummary(ticket).totalPieces }}</div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                   {{ formatDate(ticket.created_at) }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -221,12 +221,12 @@
       </div>
 
       <!-- Mensaje sin tickets -->
-      <div v-else-if="!ticketsStore.isLoading" class="bg-white rounded-lg shadow-sm p-8 text-center mb-6">
+      <div v-else-if="!ticketsStore.isLoading" class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8 text-center mb-6">
         <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
         </svg>
-        <h3 class="mt-2 text-sm font-medium text-gray-900">No hay tickets</h3>
-        <p class="mt-1 text-sm text-gray-500">
+        <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">No hay tickets</h3>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">
           {{ hasFilters ? 'No se encontraron tickets con los filtros aplicados.' : 'Comienza creando tu primer ticket.' }}
         </p>
         <div class="mt-6">
@@ -240,7 +240,7 @@
       </div>
 
       <!-- Paginación -->
-      <div v-if="totalPages > 1" class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 rounded-lg">
+      <div v-if="totalPages > 1" class="bg-white dark:bg-gray-800 px-4 py-3 flex items-center justify-between border-t border-gray-200 dark:border-gray-700 sm:px-6 rounded-lg">
         <div class="flex-1 flex justify-between sm:hidden">
           <button 
             @click="previousPage"
@@ -259,7 +259,7 @@
         </div>
         <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
           <div>
-            <p class="text-sm text-gray-700">
+            <p class="text-sm text-gray-700 dark:text-gray-300">
               Mostrando <span class="font-medium">{{ startIndex + 1 }}</span> a 
               <span class="font-medium">{{ endIndex }}</span> de 
               <span class="font-medium">{{ filteredTickets.length }}</span> tickets
