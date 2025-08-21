@@ -19,7 +19,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
             {{ isLoading ? 'Actualizando...' : 'Actualizar' }}
-          </button>
+        </button>
           <span class="text-sm text-gray-500">
             Última actualización: {{ lastUpdate }}
           </span>
@@ -32,9 +32,9 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             {{ autoRefresh ? 'Auto-refresh ON' : 'Auto-refresh OFF' }}
-          </button>
-        </div>
+        </button>
       </div>
+    </div>
 
       <!-- Tarjetas de estadísticas principales -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -61,8 +61,8 @@
 
         <!-- Total de Piezas -->
         <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-green-500">
-          <div class="flex items-center">
-            <div class="flex-shrink-0">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
               <svg class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
               </svg>
@@ -87,8 +87,8 @@
               <svg class="h-8 w-8 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
               </svg>
-            </div>
-            <div class="ml-4">
+          </div>
+          <div class="ml-4">
               <p class="text-sm font-medium text-gray-500">Usuarios Activos</p>
               <p class="text-2xl font-semibold text-gray-900">{{ stats.activeUsers }}</p>
               <div class="flex items-center mt-1">
@@ -116,7 +116,7 @@
               <div class="flex items-center mt-1">
                 <span class="text-sm text-gray-500">
                   {{ Math.round((stats.activeZones / stats.totalZones) * 100) }}% activas
-                </span>
+          </span>
               </div>
             </div>
           </div>
@@ -240,7 +240,7 @@
           <h3 class="text-lg font-medium text-gray-900 mb-4">Actividad Reciente</h3>
           <div class="space-y-3">
             <div v-for="activity in recentActivity" :key="activity.id" class="flex items-start space-x-3">
-              <div class="flex-shrink-0">
+          <div class="flex-shrink-0">
                 <div class="w-2 h-2 rounded-full mt-2" :class="getActivityColor(activity.type)"></div>
               </div>
               <div class="flex-1 min-w-0">
@@ -321,9 +321,9 @@
                   class="bg-green-600 h-2 rounded-full" 
                   :style="{ width: performance.uptime }"
                 ></div>
-              </div>
-            </div>
-          </div>
+        </div>
+      </div>
+    </div>
         </div>
       </div>
 
@@ -336,14 +336,14 @@
               <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
               </svg>
-            </div>
+        </div>
             <div class="ml-3">
               <h3 class="text-sm font-medium text-red-800">Alertas del Sistema</h3>
               <div class="mt-2 text-sm text-red-700">
                 <ul class="list-disc pl-5 space-y-1">
                   <li v-for="alert in criticalAlerts" :key="alert.id">{{ alert.message }}</li>
                 </ul>
-              </div>
+    </div>
             </div>
           </div>
         </div>
@@ -655,55 +655,55 @@ const initCharts = () => {
   // Gráfico de zonas
   if (zoneChart.value) {
     zoneChartInstance = new Chart(zoneChart.value, {
-      type: 'doughnut',
-      data: {
+    type: 'doughnut',
+    data: {
         labels: ['Zona A', 'Zona B', 'Zona C'],
-        datasets: [{
+      datasets: [{
           data: [300, 250, 200],
           backgroundColor: ['#3B82F6', '#10B981', '#F59E0B']
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            position: 'bottom'
-          }
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom'
         }
       }
-    })
+    }
+  })
   }
 
   // Gráfico de tendencia
   if (trendChart.value) {
     trendChartInstance = new Chart(trendChart.value, {
-      type: 'line',
-      data: {
+    type: 'line',
+    data: {
         labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
-        datasets: [{
-          label: 'Tickets',
+      datasets: [{
+        label: 'Tickets',
           data: [65, 59, 80, 81, 56, 55, 40],
-          borderColor: '#3B82F6',
-          backgroundColor: 'rgba(59, 130, 246, 0.1)',
-          tension: 0.4
-        }]
+        borderColor: '#3B82F6',
+        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        tension: 0.4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        }
       },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false
-          }
-        },
-        scales: {
-          y: {
-            beginAtZero: true
-          }
+      scales: {
+        y: {
+          beginAtZero: true
         }
       }
-    })
+    }
+  })
   }
 
   // Gráfico de auditoría
