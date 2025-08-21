@@ -1,268 +1,384 @@
 <template>
   <div class="settings-view">
     <div class="container mx-auto px-4 py-8">
-      <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold text-gray-900">Configuraciones</h1>
-        <button 
-          @click="saveAllSettings"
-          class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
-        >
-          Guardar Cambios
-        </button>
+      <!-- Header -->
+      <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Configuración</h1>
+        <p class="text-gray-600">Personaliza la aplicación según tus preferencias</p>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Navegación lateral -->
-        <div class="lg:col-span-1">
-          <nav class="space-y-1">
-            <button 
-              v-for="section in sections" 
-              :key="section.id"
-              @click="activeSection = section.id"
-              :class="[
-                'w-full text-left px-3 py-2 text-sm font-medium rounded-md',
-                activeSection === section.id
-                  ? 'bg-blue-100 text-blue-700'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-              ]"
-            >
-              {{ section.name }}
-            </button>
-          </nav>
+      <!-- Navegación por pestañas -->
+      <div class="mb-8">
+        <nav class="flex space-x-8 border-b border-gray-200">
+          <button
+            v-for="tab in tabs"
+            :key="tab.id"
+            @click="activeTab = tab.id"
+            :class="[
+              'py-2 px-1 border-b-2 font-medium text-sm transition-colors',
+              activeTab === tab.id
+                ? 'border-blue-500 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            ]"
+          >
+            <div class="flex items-center space-x-2">
+              <component :is="tab.icon" class="w-5 h-5" />
+              <span>{{ tab.name }}</span>
+            </div>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Contenido de las pestañas -->
+      <div class="tab-content">
+        <!-- Pestaña de Temas -->
+        <div v-if="activeTab === 'themes'" class="space-y-6">
+          <ThemeCustomizer />
         </div>
 
-        <!-- Contenido de configuraciones -->
-        <div class="lg:col-span-2">
-          <!-- Configuración General -->
-          <div v-if="activeSection === 'general'" class="space-y-6">
-            <div class="bg-white rounded-lg shadow-sm p-6">
-              <h3 class="text-lg font-medium text-gray-900 mb-4">Configuración General</h3>
-              <div class="space-y-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Nombre de la Empresa</label>
-                  <input 
-                    v-model="settings.general.companyName"
-                    type="text" 
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Email de Contacto</label>
-                  <input 
-                    v-model="settings.general.contactEmail"
-                    type="email" 
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Zona Horaria</label>
-                  <select 
-                    v-model="settings.general.timezone"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="America/Mexico_City">México (GMT-6)</option>
-                    <option value="America/New_York">Nueva York (GMT-5)</option>
-                    <option value="America/Los_Angeles">Los Ángeles (GMT-8)</option>
-                    <option value="Europe/Madrid">Madrid (GMT+1)</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Moneda</label>
-                  <select 
-                    v-model="settings.general.currency"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="USD">Dólar Estadounidense (USD)</option>
-                    <option value="EUR">Euro (EUR)</option>
-                    <option value="MXN">Peso Mexicano (MXN)</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
+        <!-- Pestaña de Atajos de Teclado -->
+        <div v-if="activeTab === 'shortcuts'" class="space-y-6">
+          <KeyboardShortcuts />
+        </div>
 
-          <!-- Configuración de Notificaciones -->
-          <div v-if="activeSection === 'notifications'" class="space-y-6">
-            <div class="bg-white rounded-lg shadow-sm p-6">
-              <h3 class="text-lg font-medium text-gray-900 mb-4">Configuración de Notificaciones</h3>
-              <div class="space-y-4">
-                <div class="flex items-center justify-between">
-                  <div>
-                    <h4 class="text-sm font-medium text-gray-900">Notificaciones por Email</h4>
-                    <p class="text-sm text-gray-500">Recibir notificaciones por correo electrónico</p>
-                  </div>
-                  <label class="relative inline-flex items-center cursor-pointer">
-                    <input 
-                      v-model="settings.notifications.emailEnabled"
-                      type="checkbox" 
-                      class="sr-only peer"
-                    >
-                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                  </label>
-                </div>
-                <div class="flex items-center justify-between">
-                  <div>
-                    <h4 class="text-sm font-medium text-gray-900">Notificaciones Push</h4>
-                    <p class="text-sm text-gray-500">Recibir notificaciones en el navegador</p>
-                  </div>
-                  <label class="relative inline-flex items-center cursor-pointer">
-                    <input 
-                      v-model="settings.notifications.pushEnabled"
-                      type="checkbox" 
-                      class="sr-only peer"
-                    >
-                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                  </label>
-                </div>
-                <div class="flex items-center justify-between">
-                  <div>
-                    <h4 class="text-sm font-medium text-gray-900">Alertas de Stock Bajo</h4>
-                    <p class="text-sm text-gray-500">Notificar cuando el stock esté bajo</p>
-                  </div>
-                  <label class="relative inline-flex items-center cursor-pointer">
-                    <input 
-                      v-model="settings.notifications.lowStockAlerts"
-                      type="checkbox" 
-                      class="sr-only peer"
-                    >
-                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
+        <!-- Pestaña de Modo Offline -->
+        <div v-if="activeTab === 'offline'" class="space-y-6">
+          <OfflineManager />
+        </div>
 
-          <!-- Configuración de Seguridad -->
-          <div v-if="activeSection === 'security'" class="space-y-6">
-            <div class="bg-white rounded-lg shadow-sm p-6">
-              <h3 class="text-lg font-medium text-gray-900 mb-4">Configuración de Seguridad</h3>
-              <div class="space-y-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Tiempo de Sesión (minutos)</label>
-                  <input 
-                    v-model="settings.security.sessionTimeout"
-                    type="number" 
-                    min="5"
-                    max="480"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        <!-- Pestaña de Notificaciones -->
+        <div v-if="activeTab === 'notifications'" class="space-y-6">
+          <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Configuración de Notificaciones</h3>
+            
+            <!-- Preferencias de notificaciones -->
+            <div class="space-y-6">
+              <div>
+                <h4 class="text-sm font-medium text-gray-700 mb-3">Tipos de Notificaciones</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div
+                    v-for="(enabled, category) in notificationPreferences"
+                    :key="category"
+                    class="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
                   >
-                </div>
-                <div class="flex items-center justify-between">
-                  <div>
-                    <h4 class="text-sm font-medium text-gray-900">Autenticación de Dos Factores</h4>
-                    <p class="text-sm text-gray-500">Requerir 2FA para todos los usuarios</p>
-                  </div>
-                  <label class="relative inline-flex items-center cursor-pointer">
-                    <input 
-                      v-model="settings.security.twoFactorRequired"
-                      type="checkbox" 
-                      class="sr-only peer"
-                    >
-                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                  </label>
-                </div>
-                <div class="flex items-center justify-between">
-                  <div>
-                    <h4 class="text-sm font-medium text-gray-900">Registro de Actividad</h4>
-                    <p class="text-sm text-gray-500">Mantener registro de todas las actividades</p>
-                  </div>
-                  <label class="relative inline-flex items-center cursor-pointer">
-                    <input 
-                      v-model="settings.security.activityLogging"
-                      type="checkbox" 
-                      class="sr-only peer"
-                    >
-                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Configuración de Integración -->
-          <div v-if="activeSection === 'integration'" class="space-y-6">
-            <div class="bg-white rounded-lg shadow-sm p-6">
-              <h3 class="text-lg font-medium text-gray-900 mb-4">Configuración de Integración</h3>
-              <div class="space-y-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">URL de la API</label>
-                  <input 
-                    v-model="settings.integration.apiUrl"
-                    type="url" 
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Clave de API</label>
-                  <input 
-                    v-model="settings.integration.apiKey"
-                    type="password" 
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                </div>
-                <div class="flex items-center justify-between">
-                  <div>
-                    <h4 class="text-sm font-medium text-gray-900">Sincronización Automática</h4>
-                    <p class="text-sm text-gray-500">Sincronizar datos automáticamente</p>
-                  </div>
-                  <label class="relative inline-flex items-center cursor-pointer">
-                    <input 
-                      v-model="settings.integration.autoSync"
-                      type="checkbox" 
-                      class="sr-only peer"
-                    >
-                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Configuración de Apariencia -->
-          <div v-if="activeSection === 'appearance'" class="space-y-6">
-            <div class="bg-white rounded-lg shadow-sm p-6">
-              <h3 class="text-lg font-medium text-gray-900 mb-4">Configuración de Apariencia</h3>
-              <div class="space-y-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Tema</label>
-                  <select 
-                    v-model="settings.appearance.theme"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="light">Claro</option>
-                    <option value="dark">Oscuro</option>
-                    <option value="auto">Automático</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Color Principal</label>
-                  <div class="flex space-x-2">
-                    <button 
-                      v-for="color in themeColors" 
-                      :key="color.name"
-                      @click="settings.appearance.primaryColor = color.value"
+                    <div>
+                      <span class="text-sm font-medium text-gray-900">{{ getCategoryName(category) }}</span>
+                      <p class="text-xs text-gray-500">{{ getCategoryDescription(category) }}</p>
+                    </div>
+                    <button
+                      @click="updateNotificationPreference(category, !enabled)"
                       :class="[
-                        'w-8 h-8 rounded-full border-2',
-                        settings.appearance.primaryColor === color.value ? 'border-gray-900' : 'border-gray-300'
+                        'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
+                        enabled ? 'bg-blue-600' : 'bg-gray-200'
                       ]"
-                      :style="{ backgroundColor: color.value }"
-                    ></button>
-                  </div>
-                </div>
-                <div class="flex items-center justify-between">
-                  <div>
-                    <h4 class="text-sm font-medium text-gray-900">Mostrar Animaciones</h4>
-                    <p class="text-sm text-gray-500">Habilitar animaciones en la interfaz</p>
-                  </div>
-                  <label class="relative inline-flex items-center cursor-pointer">
-                    <input 
-                      v-model="settings.appearance.animations"
-                      type="checkbox" 
-                      class="sr-only peer"
                     >
-                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                  </label>
+                      <span
+                        :class="[
+                          'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
+                          enabled ? 'translate-x-5' : 'translate-x-0'
+                        ]"
+                      ></span>
+                    </button>
+                  </div>
                 </div>
+              </div>
+
+              <!-- Configuración de sonidos -->
+              <div>
+                <h4 class="text-sm font-medium text-gray-700 mb-3">Sonidos y Alertas</h4>
+                <div class="space-y-3">
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-700">Sonidos de notificación</span>
+                    <button
+                      @click="notificationsStore.toggleSound"
+                      :class="[
+                        'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
+                        notificationsStore.soundEnabled ? 'bg-blue-600' : 'bg-gray-200'
+                      ]"
+                    >
+                      <span
+                        :class="[
+                          'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
+                          notificationsStore.soundEnabled ? 'translate-x-5' : 'translate-x-0'
+                        ]"
+                      ></span>
+                    </button>
+                  </div>
+
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-700">Notificaciones del navegador</span>
+                    <button
+                      @click="notificationsStore.toggleDesktopNotifications"
+                      :class="[
+                        'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
+                        notificationsStore.desktopNotifications ? 'bg-blue-600' : 'bg-gray-200'
+                      ]"
+                    >
+                      <span
+                        :class="[
+                          'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
+                          notificationsStore.desktopNotifications ? 'translate-x-5' : 'translate-x-0'
+                        ]"
+                      ></span>
+                    </button>
+                  </div>
+
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-700">Notificaciones push</span>
+                    <button
+                      @click="notificationsStore.togglePushNotifications"
+                      :class="[
+                        'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
+                        notificationsStore.pushNotifications ? 'bg-blue-600' : 'bg-gray-200'
+                      ]"
+                    >
+                      <span
+                        :class="[
+                          'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
+                          notificationsStore.pushNotifications ? 'translate-x-5' : 'translate-x-0'
+                        ]"
+                      ></span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Estadísticas de notificaciones -->
+              <div>
+                <h4 class="text-sm font-medium text-gray-700 mb-3">Estadísticas</h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div class="bg-gray-50 rounded-lg p-3">
+                    <p class="text-xs text-gray-500">Total</p>
+                    <p class="text-lg font-semibold text-gray-900">{{ notificationStats.total }}</p>
+                  </div>
+                  <div class="bg-gray-50 rounded-lg p-3">
+                    <p class="text-xs text-gray-500">No leídas</p>
+                    <p class="text-lg font-semibold text-gray-900">{{ notificationStats.unread }}</p>
+                  </div>
+                  <div class="bg-gray-50 rounded-lg p-3">
+                    <p class="text-xs text-gray-500">Críticas</p>
+                    <p class="text-lg font-semibold text-gray-900">{{ notificationStats.critical }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pestaña de Usuario -->
+        <div v-if="activeTab === 'user'" class="space-y-6">
+          <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Perfil de Usuario</h3>
+            
+            <form @submit.prevent="updateUserProfile" class="space-y-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Nombre de usuario
+                  </label>
+                  <input
+                    v-model="userForm.username"
+                    type="text"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Email
+                  </label>
+                  <input
+                    v-model="userForm.email"
+                    type="email"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Nombre completo
+                  </label>
+                  <input
+                    v-model="userForm.fullName"
+                    type="text"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Rol
+                  </label>
+                  <select
+                    v-model="userForm.role"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="admin">Administrador</option>
+                    <option value="user">Usuario</option>
+                    <option value="viewer">Visualizador</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="border-t border-gray-200 pt-6">
+                <h4 class="text-sm font-medium text-gray-700 mb-3">Cambiar Contraseña</h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                      Contraseña actual
+                    </label>
+                    <input
+                      v-model="userForm.currentPassword"
+                      type="password"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                      Nueva contraseña
+                    </label>
+                    <input
+                      v-model="userForm.newPassword"
+                      type="password"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                      Confirmar contraseña
+                    </label>
+                    <input
+                      v-model="userForm.confirmPassword"
+                      type="password"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex justify-end space-x-3">
+                <button
+                  type="button"
+                  @click="resetUserForm"
+                  class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                >
+                  Restaurar
+                </button>
+                <button
+                  type="submit"
+                  class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                >
+                  Guardar Cambios
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Pestaña de Sistema -->
+        <div v-if="activeTab === 'system'" class="space-y-6">
+          <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Configuración del Sistema</h3>
+            
+            <div class="space-y-6">
+              <!-- Configuración de caché -->
+              <div>
+                <h4 class="text-sm font-medium text-gray-700 mb-3">Gestión de Caché</h4>
+                <div class="space-y-3">
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-700">Caché de reportes</span>
+                    <span class="text-sm text-gray-900">{{ cacheInfo.reports || '0' }} MB</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-700">Caché de usuarios</span>
+                    <span class="text-sm text-gray-900">{{ cacheInfo.users || '0' }} MB</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-700">Caché de catálogo</span>
+                    <span class="text-sm text-gray-900">{{ cacheInfo.catalog || '0' }} MB</span>
+                  </div>
+                  <button
+                    @click="clearAllCache"
+                    class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  >
+                    <svg class="-ml-1 mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                    Limpiar Todo el Caché
+                  </button>
+                </div>
+              </div>
+
+              <!-- Configuración de logs -->
+              <div>
+                <h4 class="text-sm font-medium text-gray-700 mb-3">Configuración de Logs</h4>
+                <div class="space-y-3">
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-700">Nivel de log</span>
+                    <select
+                      v-model="systemConfig.logLevel"
+                      class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="debug">Debug</option>
+                      <option value="info">Info</option>
+                      <option value="warning">Warning</option>
+                      <option value="error">Error</option>
+                    </select>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-700">Retención de logs (días)</span>
+                    <input
+                      v-model="systemConfig.logRetention"
+                      type="number"
+                      min="1"
+                      max="365"
+                      class="w-20 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Configuración de seguridad -->
+              <div>
+                <h4 class="text-sm font-medium text-gray-700 mb-3">Seguridad</h4>
+                <div class="space-y-3">
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-700">Tiempo de sesión (minutos)</span>
+                    <input
+                      v-model="systemConfig.sessionTimeout"
+                      type="number"
+                      min="15"
+                      max="480"
+                      class="w-20 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-700">Requerir 2FA</span>
+                    <button
+                      @click="systemConfig.require2FA = !systemConfig.require2FA"
+                      :class="[
+                        'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
+                        systemConfig.require2FA ? 'bg-blue-600' : 'bg-gray-200'
+                      ]"
+                    >
+                      <span
+                        :class="[
+                          'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
+                          systemConfig.require2FA ? 'translate-x-5' : 'translate-x-0'
+                        ]"
+                      ></span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex justify-end">
+                <button
+                  @click="saveSystemConfig"
+                  class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                >
+                  Guardar Configuración
+                </button>
               </div>
             </div>
           </div>
@@ -272,80 +388,186 @@
   </div>
 </template>
 
-<script>
-import { ref, reactive } from 'vue'
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { useNotificationsStore } from '../stores/notifications'
+import { useReportsStore } from '../stores/reports'
+import ThemeCustomizer from '../components/theme/ThemeCustomizer.vue'
+import KeyboardShortcuts from '../components/shortcuts/KeyboardShortcuts.vue'
+import OfflineManager from '../components/offline/OfflineManager.vue'
+import {
+  PaintBrushIcon,
+  KeyboardIcon,
+  WifiIcon,
+  BellIcon,
+  UserIcon,
+  Cog6ToothIcon
+} from '@heroicons/vue/24/outline'
 
-export default {
-  name: 'SettingsView',
-  setup() {
-    const activeSection = ref('general')
+// Stores
+const notificationsStore = useNotificationsStore()
+const reportsStore = useReportsStore()
 
-    const sections = [
-      { id: 'general', name: 'General' },
-      { id: 'notifications', name: 'Notificaciones' },
-      { id: 'security', name: 'Seguridad' },
-      { id: 'integration', name: 'Integración' },
-      { id: 'appearance', name: 'Apariencia' }
-    ]
+// Estados
+const activeTab = ref('themes')
 
-    const settings = reactive({
-      general: {
-        companyName: 'TicketMaster Admin',
-        contactEmail: 'admin@ticketmaster.com',
-        timezone: 'America/Mexico_City',
-        currency: 'USD'
-      },
-      notifications: {
-        emailEnabled: true,
-        pushEnabled: false,
-        lowStockAlerts: true
-      },
-      security: {
-        sessionTimeout: 30,
-        twoFactorRequired: false,
-        activityLogging: true
-      },
-      integration: {
-        apiUrl: 'https://api.ticketmaster.com',
-        apiKey: '',
-        autoSync: true
-      },
-      appearance: {
-        theme: 'light',
-        primaryColor: '#3B82F6',
-        animations: true
-      }
-    })
+// Pestañas disponibles
+const tabs = [
+  { id: 'themes', name: 'Temas', icon: PaintBrushIcon },
+  { id: 'shortcuts', name: 'Atajos de Teclado', icon: KeyboardIcon },
+  { id: 'offline', name: 'Modo Offline', icon: WifiIcon },
+  { id: 'notifications', name: 'Notificaciones', icon: BellIcon },
+  { id: 'user', name: 'Usuario', icon: UserIcon },
+  { id: 'system', name: 'Sistema', icon: Cog6ToothIcon }
+]
 
-    const themeColors = [
-      { name: 'Azul', value: '#3B82F6' },
-      { name: 'Verde', value: '#10B981' },
-      { name: 'Púrpura', value: '#8B5CF6' },
-      { name: 'Rojo', value: '#EF4444' },
-      { name: 'Naranja', value: '#F59E0B' },
-      { name: 'Rosa', value: '#EC4899' }
-    ]
+// Formulario de usuario
+const userForm = ref({
+  username: 'admin',
+  email: 'admin@example.com',
+  fullName: 'Administrador del Sistema',
+  role: 'admin',
+  currentPassword: '',
+  newPassword: '',
+  confirmPassword: ''
+})
 
-    const saveAllSettings = () => {
-      // Simular guardado de configuraciones
-      console.log('Guardando configuraciones...', settings)
-      // Aquí se enviarían las configuraciones al backend
+// Configuración del sistema
+const systemConfig = ref({
+  logLevel: 'info',
+  logRetention: 30,
+  sessionTimeout: 120,
+  require2FA: false
+})
+
+// Preferencias de notificaciones
+const notificationPreferences = computed(() => notificationsStore.notificationPreferences)
+
+// Estadísticas de notificaciones
+const notificationStats = computed(() => {
+  const stats = notificationsStore.getNotificationStats('24h')
+  return {
+    total: stats.total,
+    unread: stats.unread,
+    critical: stats.byPriority?.critical || 0
+  }
+})
+
+// Información de caché
+const cacheInfo = ref({
+  reports: '2.5',
+  users: '1.2',
+  catalog: '0.8'
+})
+
+// Funciones
+const getCategoryName = (category) => {
+  const names = {
+    tickets: 'Tickets',
+    users: 'Usuarios',
+    system: 'Sistema',
+    security: 'Seguridad',
+    reports: 'Reportes'
+  }
+  return names[category] || category
+}
+
+const getCategoryDescription = (category) => {
+  const descriptions = {
+    tickets: 'Notificaciones sobre tickets de venta',
+    users: 'Notificaciones sobre usuarios del sistema',
+    system: 'Notificaciones del sistema y mantenimiento',
+    security: 'Alertas de seguridad y acceso',
+    reports: 'Notificaciones sobre reportes y exportaciones'
+  }
+  return descriptions[category] || ''
+}
+
+const updateNotificationPreference = (category, enabled) => {
+  notificationsStore.updateNotificationPreferences(category, enabled)
+}
+
+const updateUserProfile = () => {
+  // Validar contraseñas si se están cambiando
+  if (userForm.value.newPassword) {
+    if (userForm.value.newPassword !== userForm.value.confirmPassword) {
+      alert('Las contraseñas no coinciden')
+      return
     }
+    if (userForm.value.newPassword.length < 8) {
+      alert('La nueva contraseña debe tener al menos 8 caracteres')
+      return
+    }
+  }
 
-    return {
-      activeSection,
-      sections,
-      settings,
-      themeColors,
-      saveAllSettings
+  // Aquí se enviarían los datos al backend
+  console.log('Actualizando perfil de usuario:', userForm.value)
+  alert('Perfil actualizado correctamente')
+  
+  // Limpiar campos de contraseña
+  userForm.value.currentPassword = ''
+  userForm.value.newPassword = ''
+  userForm.value.confirmPassword = ''
+}
+
+const resetUserForm = () => {
+  userForm.value = {
+    username: 'admin',
+    email: 'admin@example.com',
+    fullName: 'Administrador del Sistema',
+    role: 'admin',
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  }
+}
+
+const clearAllCache = async () => {
+  if (confirm('¿Estás seguro de que quieres limpiar todo el caché? Esto puede afectar el rendimiento temporalmente.')) {
+    try {
+      await reportsStore.clearCache()
+      // Limpiar otros caches aquí
+      alert('Caché limpiado correctamente')
+    } catch (error) {
+      console.error('Error clearing cache:', error)
+      alert('Error al limpiar el caché')
     }
   }
 }
+
+const saveSystemConfig = () => {
+  // Aquí se guardarían las configuraciones del sistema
+  console.log('Guardando configuración del sistema:', systemConfig.value)
+  alert('Configuración guardada correctamente')
+}
+
+// Lifecycle
+onMounted(() => {
+  // Cargar configuraciones guardadas
+  const savedLogLevel = localStorage.getItem('system_log_level')
+  const savedLogRetention = localStorage.getItem('system_log_retention')
+  const savedSessionTimeout = localStorage.getItem('system_session_timeout')
+  const savedRequire2FA = localStorage.getItem('system_require_2fa')
+
+  if (savedLogLevel) systemConfig.value.logLevel = savedLogLevel
+  if (savedLogRetention) systemConfig.value.logRetention = parseInt(savedLogRetention)
+  if (savedSessionTimeout) systemConfig.value.sessionTimeout = parseInt(savedSessionTimeout)
+  if (savedRequire2FA !== null) systemConfig.value.require2FA = savedRequire2FA === 'true'
+})
 </script>
 
 <style scoped>
 .settings-view {
   min-height: 100vh;
   background-color: #f9fafb;
+}
+
+.tab-content {
+  min-height: 600px;
+}
+
+/* Transiciones suaves */
+* {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 </style>

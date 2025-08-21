@@ -4,50 +4,535 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-    html {
-        font-family: 'Inter', system-ui, sans-serif;
-    }
-
-    body {
-        @apply bg-gray-50 text-gray-900;
-    }
+/* Variables CSS para temas */
+:root {
+    --color-primary: #3B82F6;
+    --color-primary-light: #60A5FA;
+    --color-primary-dark: #1E40AF;
+    --color-accent: #6366F1;
+    --color-accent-light: #818CF8;
+    --color-accent-dark: #4F46E5;
+    --color-background: #FFFFFF;
+    --color-surface: #F9FAFB;
+    --color-text: #111827;
+    --color-text-secondary: #6B7280;
+    --color-border: #E5E7EB;
+    --color-success: #10B981;
+    --color-warning: #F59E0B;
+    --color-error: #EF4444;
+    --color-info: #3B82F6;
+    --font-size-base: 1;
+    --font-family-base: 'Inter', system-ui, sans-serif;
+    --border-radius: 0.5rem;
+    --spacing-unit: 1rem;
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
-@layer components {
-    .btn {
-        @apply px-4 py-2 rounded-lg font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2;
-    }
+/* Tema claro (por defecto) */
+.theme-light {
+    --color-background: #FFFFFF;
+    --color-surface: #F9FAFB;
+    --color-text: #111827;
+    --color-text-secondary: #6B7280;
+    --color-border: #E5E7EB;
+}
 
-    .btn-primary {
-        @apply btn bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500;
-    }
+/* Tema oscuro */
+.theme-dark {
+    --color-background: #111827;
+    --color-surface: #1F2937;
+    --color-text: #F9FAFB;
+    --color-text-secondary: #D1D5DB;
+    --color-border: #374151;
+}
 
-    .btn-secondary {
-        @apply btn bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500;
-    }
+/* Tema azul profesional */
+.theme-blue {
+    --color-background: #F8FAFC;
+    --color-surface: #FFFFFF;
+    --color-text: #0F172A;
+    --color-text-secondary: #475569;
+    --color-border: #CBD5E1;
+}
 
-    .btn-danger {
-        @apply btn bg-danger-600 text-white hover:bg-danger-700 focus:ring-danger-500;
+/* Tema verde naturaleza */
+.theme-green {
+    --color-background: #F0FDF4;
+    --color-surface: #FFFFFF;
+    --color-text: #064E3B;
+    --color-text-secondary: #374151;
+    --color-border: #D1FAE5;
+}
+
+/* Tema púrpura creativo */
+.theme-purple {
+    --color-background: #FAF5FF;
+    --color-surface: #FFFFFF;
+    --color-text: #581C87;
+    --color-text-secondary: #374151;
+    --color-border: #E9D5FF;
+}
+
+/* Tema atardecer */
+.theme-sunset {
+    --color-background: #FEF7ED;
+    --color-surface: #FFFFFF;
+    --color-text: #7C2D12;
+    --color-text-secondary: #374151;
+    --color-border: #FED7AA;
+}
+
+/* Tema océano */
+.theme-ocean {
+    --color-background: #F0FDFA;
+    --color-surface: #FFFFFF;
+    --color-text: #164E63;
+    --color-text-secondary: #374151;
+    --color-border: #A7F3D0;
+}
+
+/* Tema medianoche */
+.theme-midnight {
+    --color-background: #020617;
+    --color-surface: #0F172A;
+    --color-text: #F8FAFC;
+    --color-text-secondary: #CBD5E1;
+    --color-border: #334155;
+}
+
+/* Modo compacto */
+.compact-mode {
+    --spacing-unit: 0.75rem;
+    --border-radius: 0.375rem;
+}
+
+.compact-mode .p-6 {
+    padding: var(--spacing-unit);
+}
+
+.compact-mode .p-4 {
+    padding: calc(var(--spacing-unit) * 0.75);
+}
+
+.compact-mode .p-3 {
+    padding: calc(var(--spacing-unit) * 0.5);
+}
+
+.compact-mode .space-y-6>*+* {
+    margin-top: calc(var(--spacing-unit) * 0.75);
+}
+
+.compact-mode .space-y-4>*+* {
+    margin-top: calc(var(--spacing-unit) * 0.5);
+}
+
+.compact-mode .space-y-3>*+* {
+    margin-top: calc(var(--spacing-unit) * 0.375);
+}
+
+/* Alto contraste */
+.high-contrast {
+    --color-text: #000000;
+    --color-background: #FFFFFF;
+    --color-border: #000000;
+    --color-text-secondary: #000000;
+}
+
+.high-contrast .bg-gray-50 {
+    background-color: #FFFFFF;
+}
+
+.high-contrast .border-gray-200 {
+    border-color: #000000;
+}
+
+.high-contrast .text-gray-500 {
+    color: #000000;
+}
+
+.high-contrast .text-gray-600 {
+    color: #000000;
+}
+
+.high-contrast .text-gray-700 {
+    color: #000000;
+}
+
+/* Sin animaciones */
+.no-animations * {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+}
+
+/* Estilos base */
+body {
+    font-family: var(--font-family-base);
+    font-size: calc(1rem * var(--font-size-base));
+    background-color: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.6;
+}
+
+/* Componentes base */
+.btn {
+    @apply inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors;
+}
+
+.btn-primary {
+    @apply text-white bg-blue-600 hover:bg-blue-700 focus:ring-blue-500;
+}
+
+.btn-secondary {
+    @apply text-gray-700 bg-white border-gray-300 hover:bg-gray-50 focus:ring-blue-500;
+}
+
+.btn-success {
+    @apply text-white bg-green-600 hover:bg-green-700 focus:ring-green-500;
+}
+
+.btn-warning {
+    @apply text-white bg-yellow-600 hover:bg-yellow-700 focus:ring-yellow-500;
+}
+
+.btn-danger {
+    @apply text-white bg-red-600 hover:bg-red-700 focus:ring-red-500;
+}
+
+/* Cards */
+.card {
+    @apply bg-white rounded-lg shadow-sm border border-gray-200;
+}
+
+.card-header {
+    @apply px-6 py-4 border-b border-gray-200;
+}
+
+.card-body {
+    @apply px-6 py-4;
+}
+
+.card-footer {
+    @apply px-6 py-4 border-t border-gray-200;
+}
+
+/* Formularios */
+.form-input {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500;
+}
+
+.form-label {
+    @apply block text-sm font-medium text-gray-700 mb-2;
+}
+
+.form-select {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500;
+}
+
+.form-checkbox {
+    @apply h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded;
+}
+
+.form-radio {
+    @apply h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300;
+}
+
+/* Tablas */
+.table {
+    @apply min-w-full divide-y divide-gray-200;
+}
+
+.table-header {
+    @apply bg-gray-50;
+}
+
+.table-header th {
+    @apply px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider;
+}
+
+.table-body {
+    @apply bg-white divide-y divide-gray-200;
+}
+
+.table-row {
+    @apply hover:bg-gray-50 transition-colors;
+}
+
+.table-cell {
+    @apply px-6 py-4 whitespace-nowrap text-sm text-gray-900;
+}
+
+/* Badges */
+.badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+
+.badge-primary {
+    @apply bg-blue-100 text-blue-800;
+}
+
+.badge-success {
+    @apply bg-green-100 text-green-800;
+}
+
+.badge-warning {
+    @apply bg-yellow-100 text-yellow-800;
+}
+
+.badge-danger {
+    @apply bg-red-100 text-red-800;
+}
+
+.badge-info {
+    @apply bg-gray-100 text-gray-800;
+}
+
+/* Alertas */
+.alert {
+    @apply p-4 rounded-md border;
+}
+
+.alert-info {
+    @apply bg-blue-50 border-blue-200 text-blue-800;
+}
+
+.alert-success {
+    @apply bg-green-50 border-green-200 text-green-800;
+}
+
+.alert-warning {
+    @apply bg-yellow-50 border-yellow-200 text-yellow-800;
+}
+
+.alert-error {
+    @apply bg-red-50 border-red-200 text-red-800;
+}
+
+/* Modales */
+.modal-overlay {
+    @apply fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50;
+}
+
+.modal-content {
+    @apply relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white;
+}
+
+/* Sidebar */
+.sidebar {
+    @apply bg-gray-800 text-white;
+}
+
+.sidebar-item {
+    @apply flex items-center px-4 py-2 text-sm font-medium text-gray-300 rounded-md hover:text-white hover:bg-gray-700 transition-colors;
+}
+
+.sidebar-item.active {
+    @apply bg-gray-900 text-white;
+}
+
+/* Navegación */
+.nav-tabs {
+    @apply flex space-x-8 border-b border-gray-200;
+}
+
+.nav-tab {
+    @apply py-2 px-1 border-b-2 font-medium text-sm transition-colors;
+}
+
+.nav-tab.active {
+    @apply border-blue-500 text-blue-600;
+}
+
+.nav-tab:not(.active) {
+    @apply border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300;
+}
+
+/* Estados de carga */
+.loading {
+    @apply opacity-50 pointer-events-none;
+}
+
+.loading-spinner {
+    @apply animate-spin -ml-1 mr-2 h-4 w-4;
+}
+
+/* Estados offline */
+.offline {
+    @apply opacity-75 pointer-events-none;
+}
+
+.offline-indicator {
+    @apply fixed top-4 right-4 z-50 bg-red-600 text-white px-4 py-2 rounded-md shadow-lg;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .container {
+        @apply px-4;
     }
 
     .card {
-        @apply bg-white rounded-xl shadow-sm border border-gray-200 p-6;
+        @apply mx-4;
     }
 
-    .input {
-        @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent;
+    .table-responsive {
+        @apply overflow-x-auto;
+    }
+}
+
+/* Accesibilidad */
+.sr-only {
+    @apply absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0;
+}
+
+/* Focus visible para navegación por teclado */
+.focus-visible:focus {
+    @apply outline-none ring-2 ring-blue-500 ring-offset-2;
+}
+
+/* Reducción de movimiento */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Impresión */
+@media print {
+    .no-print {
+        @apply hidden;
     }
 
-    .table {
-        @apply w-full border-collapse;
+    .print-break {
+        page-break-before: always;
     }
+}
 
-    .table th {
-        @apply px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200;
-    }
+/* Utilidades adicionales */
+.text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600;
+}
 
-    .table td {
-        @apply px-4 py-4 whitespace-nowrap text-sm text-gray-900 border-b border-gray-100;
-    }
+.bg-gradient-primary {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+}
+
+.bg-gradient-surface {
+    background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-background) 100%);
+}
+
+/* Sombras dinámicas */
+.shadow-dynamic {
+    box-shadow: var(--shadow-sm);
+}
+
+.shadow-dynamic:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.shadow-dynamic:active {
+    box-shadow: var(--shadow-lg);
+}
+
+/* Bordes dinámicos */
+.border-dynamic {
+    border-color: var(--color-border);
+}
+
+.border-dynamic:focus {
+    border-color: var(--color-primary);
+}
+
+/* Transiciones suaves */
+.transition-smooth {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Estados de hover mejorados */
+.hover-lift {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Indicadores de estado */
+.status-indicator {
+    @apply inline-block w-2 h-2 rounded-full;
+}
+
+.status-online {
+    @apply bg-green-500;
+}
+
+.status-offline {
+    @apply bg-red-500;
+}
+
+.status-pending {
+    @apply bg-yellow-500;
+}
+
+.status-error {
+    @apply bg-red-500;
+}
+
+/* Scrollbars personalizados */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: var(--color-surface);
+    border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-secondary);
+}
+
+/* Tooltips */
+.tooltip {
+    @apply absolute z-10 px-2 py-1 text-xs text-white bg-gray-900 rounded shadow-lg opacity-0 pointer-events-none transition-opacity;
+}
+
+.tooltip.show {
+    @apply opacity-100;
+}
+
+/* Dropdowns */
+.dropdown {
+    @apply absolute z-10 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5;
+}
+
+.dropdown-item {
+    @apply block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900;
+}
+
+/* Paginación */
+.pagination {
+    @apply flex items-center space-x-2;
+}
+
+.pagination-item {
+    @apply px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 hover:text-gray-700;
+}
+
+.pagination-item.active {
+    @apply z-10 bg-blue-50 border-blue-500 text-blue-600;
+}
+
+.pagination-item.disabled {
+    @apply opacity-50 cursor-not-allowed;
 }

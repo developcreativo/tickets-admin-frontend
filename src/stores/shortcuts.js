@@ -1,388 +1,564 @@
 import { defineStore } from 'pinia'
-import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAuthStore } from './auth'
-import { useNotificationsStore } from './notifications'
+import { ref, computed } from 'vue'
 
 export const useShortcutsStore = defineStore('shortcuts', () => {
     // Estados
+    const shortcuts = ref([])
     const isEnabled = ref(true)
-    const showHelp = ref(false)
-    const pressedKeys = ref(new Set())
-    const shortcuts = ref(new Map())
+    const globalListener = ref(null)
 
-    // Router y stores
-    const router = useRouter()
-    const authStore = useAuthStore()
-    const notificationsStore = useNotificationsStore()
-
-    // Atajos predefinidos
-    const defaultShortcuts = {
+    // Atajos por defecto
+    const defaultShortcuts = [
         // Navegación
-        'g h': { action: 'goHome', description: 'Ir al Dashboard', category: 'Navegación' },
-        'g c': { action: 'goCatalog', description: 'Ir a Catálogos', category: 'Navegación' },
-        'g u': { action: 'goUsers', description: 'Ir a Usuarios', category: 'Navegación' },
-        'g t': { action: 'goTickets', description: 'Ir a Tickets', category: 'Navegación' },
-        'g r': { action: 'goReports', description: 'Ir a Reportes', category: 'Navegación' },
-        'g s': { action: 'goSettings', description: 'Ir a Configuración', category: 'Navegación' },
-
-        // Acciones generales
-        '?': { action: 'showHelp', description: 'Mostrar ayuda de atajos', category: 'General' },
-        'escape': { action: 'closeModals', description: 'Cerrar modales/dropdowns', category: 'General' },
-        'ctrl+s': { action: 'save', description: 'Guardar cambios', category: 'General' },
-        'ctrl+z': { action: 'undo', description: 'Deshacer', category: 'General' },
-        'ctrl+y': { action: 'redo', description: 'Rehacer', category: 'General' },
-        'ctrl+f': { action: 'search', description: 'Buscar', category: 'General' },
-        'ctrl+n': { action: 'newItem', description: 'Nuevo elemento', category: 'General' },
-        'ctrl+e': { action: 'edit', description: 'Editar', category: 'General' },
-        'ctrl+d': { action: 'delete', description: 'Eliminar', category: 'General' },
-
-        // Navegación por páginas
-        'n': { action: 'nextPage', description: 'Página siguiente', category: 'Paginación' },
-        'p': { action: 'previousPage', description: 'Página anterior', category: 'Paginación' },
-        'home': { action: 'firstPage', description: 'Primera página', category: 'Paginación' },
-        'end': { action: 'lastPage', description: 'Última página', category: 'Paginación' },
-
-        // Filtros
-        'ctrl+shift+f': { action: 'toggleFilters', description: 'Mostrar/ocultar filtros', category: 'Filtros' },
-        'ctrl+shift+c': { action: 'clearFilters', description: 'Limpiar filtros', category: 'Filtros' },
-
-        // Notificaciones
-        'n': { action: 'toggleNotifications', description: 'Mostrar/ocultar notificaciones', category: 'Notificaciones' },
-        'ctrl+shift+n': { action: 'markAllRead', description: 'Marcar todas como leídas', category: 'Notificaciones' },
-
-        // Tema
-        'ctrl+shift+t': { action: 'toggleTheme', description: 'Cambiar tema', category: 'Tema' },
-        'ctrl+shift+c': { action: 'toggleCompact', description: 'Modo compacto', category: 'Tema' },
-
-        // Accesibilidad
-        'ctrl+shift+a': { action: 'toggleAccessibility', description: 'Opciones de accesibilidad', category: 'Accesibilidad' },
-        'ctrl+shift+h': { action: 'toggleHighContrast', description: 'Alto contraste', category: 'Accesibilidad' },
-        'ctrl+shift+s': { action: 'toggleAnimations', description: 'Mostrar/ocultar animaciones', category: 'Accesibilidad' },
-
-        // Sistema
-        'ctrl+shift+r': { action: 'refresh', description: 'Recargar página', category: 'Sistema' },
-        'ctrl+shift+l': { action: 'logout', description: 'Cerrar sesión', category: 'Sistema' },
-        'ctrl+shift+p': { action: 'print', description: 'Imprimir', category: 'Sistema' }
-    }
-
-    // Acciones de atajos
-    const actions = {
-        // Navegación
-        goHome: () => router.push('/'),
-        goCatalog: () => router.push('/catalog'),
-        goUsers: () => router.push('/users'),
-        goTickets: () => router.push('/tickets'),
-        goReports: () => router.push('/reports'),
-        goSettings: () => router.push('/settings'),
-
-        // Acciones generales
-        showHelp: () => {
-            showHelp.value = !showHelp.value
-            if (showHelp.value) {
-                notificationsStore.showSuccess('Presiona Escape para cerrar la ayuda')
-            }
+        {
+            id: 'nav_dashboard',
+            name: 'Ir al Dashboard',
+            description: 'Navegar a la página principal del dashboard',
+            action: 'navigate',
+            category: 'navigation',
+            keys: ['Ctrl', '1'],
+            enabled: true,
+            usageCount: 0,
+            route: '/dashboard'
         },
-        closeModals: () => {
-            // Cerrar modales abiertos
-            document.dispatchEvent(new CustomEvent('closeModals'))
-            showHelp.value = false
+        {
+            id: 'nav_catalog',
+            name: 'Ir al Catálogo',
+            description: 'Navegar a la gestión del catálogo',
+            action: 'navigate',
+            category: 'navigation',
+            keys: ['Ctrl', '2'],
+            enabled: true,
+            usageCount: 0,
+            route: '/catalog'
         },
-        save: () => {
-            // Buscar botón de guardar activo
-            const saveButton = document.querySelector('button[type="submit"]:not([disabled])')
-            if (saveButton) {
-                saveButton.click()
-                notificationsStore.showSuccess('Guardando...')
-            }
+        {
+            id: 'nav_users',
+            name: 'Ir a Usuarios',
+            description: 'Navegar a la gestión de usuarios',
+            action: 'navigate',
+            category: 'navigation',
+            keys: ['Ctrl', '3'],
+            enabled: true,
+            usageCount: 0,
+            route: '/users'
         },
-        undo: () => {
-            notificationsStore.showWarning('Función de deshacer no implementada')
+        {
+            id: 'nav_tickets',
+            name: 'Ir a Tickets',
+            description: 'Navegar a la gestión de tickets',
+            action: 'navigate',
+            category: 'navigation',
+            keys: ['Ctrl', '4'],
+            enabled: true,
+            usageCount: 0,
+            route: '/tickets'
         },
-        redo: () => {
-            notificationsStore.showWarning('Función de rehacer no implementada')
+        {
+            id: 'nav_reports',
+            name: 'Ir a Reportes',
+            description: 'Navegar a la generación de reportes',
+            action: 'navigate',
+            category: 'navigation',
+            keys: ['Ctrl', '5'],
+            enabled: true,
+            usageCount: 0,
+            route: '/reports'
         },
-        search: () => {
-            // Buscar campo de búsqueda activo
-            const searchInput = document.querySelector('input[type="search"], input[placeholder*="buscar"], input[placeholder*="search"]')
-            if (searchInput) {
-                searchInput.focus()
-                searchInput.select()
-            }
-        },
-        newItem: () => {
-            // Buscar botón de nuevo elemento
-            const newButton = document.querySelector('button:contains("Nuevo"), button:contains("Crear"), button:contains("Add")')
-            if (newButton) {
-                newButton.click()
-            }
-        },
-        edit: () => {
-            // Buscar botón de editar activo
-            const editButton = document.querySelector('button:contains("Editar"), button:contains("Edit")')
-            if (editButton) {
-                editButton.click()
-            }
-        },
-        delete: () => {
-            // Buscar botón de eliminar activo
-            const deleteButton = document.querySelector('button:contains("Eliminar"), button:contains("Delete")')
-            if (deleteButton) {
-                deleteButton.click()
-            }
+        {
+            id: 'nav_settings',
+            name: 'Ir a Configuración',
+            description: 'Navegar a la configuración del sistema',
+            action: 'navigate',
+            category: 'navigation',
+            keys: ['Ctrl', '6'],
+            enabled: true,
+            usageCount: 0,
+            route: '/settings'
         },
 
-        // Paginación
-        nextPage: () => {
-            const nextButton = document.querySelector('button:contains("Siguiente"), button:contains("Next")')
-            if (nextButton && !nextButton.disabled) {
-                nextButton.click()
-            }
+        // Acciones
+        {
+            id: 'action_create',
+            name: 'Crear Nuevo',
+            description: 'Crear un nuevo elemento en la vista actual',
+            action: 'create',
+            category: 'actions',
+            keys: ['Ctrl', 'N'],
+            enabled: true,
+            usageCount: 0
         },
-        previousPage: () => {
-            const prevButton = document.querySelector('button:contains("Anterior"), button:contains("Previous")')
-            if (prevButton && !prevButton.disabled) {
-                prevButton.click()
-            }
+        {
+            id: 'action_edit',
+            name: 'Editar',
+            description: 'Editar el elemento seleccionado',
+            action: 'edit',
+            category: 'actions',
+            keys: ['Ctrl', 'E'],
+            enabled: true,
+            usageCount: 0
         },
-        firstPage: () => {
-            const firstButton = document.querySelector('button:contains("Primera"), button:contains("First")')
-            if (firstButton && !firstButton.disabled) {
-                firstButton.click()
-            }
+        {
+            id: 'action_delete',
+            name: 'Eliminar',
+            description: 'Eliminar el elemento seleccionado',
+            action: 'delete',
+            category: 'actions',
+            keys: ['Ctrl', 'Delete'],
+            enabled: true,
+            usageCount: 0
         },
-        lastPage: () => {
-            const lastButton = document.querySelector('button:contains("Última"), button:contains("Last")')
-            if (lastButton && !lastButton.disabled) {
-                lastButton.click()
-            }
+        {
+            id: 'action_save',
+            name: 'Guardar',
+            description: 'Guardar cambios en el formulario actual',
+            action: 'save',
+            category: 'actions',
+            keys: ['Ctrl', 'S'],
+            enabled: true,
+            usageCount: 0
         },
-
-        // Filtros
-        toggleFilters: () => {
-            const filtersSection = document.querySelector('[data-filters-section]')
-            if (filtersSection) {
-                const isHidden = filtersSection.classList.contains('hidden')
-                filtersSection.classList.toggle('hidden', !isHidden)
-                notificationsStore.showInfo(`Filtros ${isHidden ? 'mostrados' : 'ocultos'}`)
-            }
+        {
+            id: 'action_search',
+            name: 'Buscar',
+            description: 'Activar la búsqueda en la vista actual',
+            action: 'search',
+            category: 'actions',
+            keys: ['Ctrl', 'F'],
+            enabled: true,
+            usageCount: 0
         },
-        clearFilters: () => {
-            const clearButton = document.querySelector('button:contains("Limpiar"), button:contains("Clear")')
-            if (clearButton) {
-                clearButton.click()
-            }
-        },
-
-        // Notificaciones
-        toggleNotifications: () => {
-            const notificationButton = document.querySelector('.notification-center button')
-            if (notificationButton) {
-                notificationButton.click()
-            }
-        },
-        markAllRead: () => {
-            notificationsStore.markAllAsRead()
-            notificationsStore.showSuccess('Todas las notificaciones marcadas como leídas')
-        },
-
-        // Tema
-        toggleTheme: () => {
-            // Simular cambio de tema
-            const currentTheme = document.documentElement.classList.contains('theme-dark') ? 'light' : 'dark'
-            document.documentElement.classList.toggle('theme-dark', currentTheme === 'dark')
-            notificationsStore.showInfo(`Tema cambiado a ${currentTheme === 'dark' ? 'oscuro' : 'claro'}`)
-        },
-        toggleCompact: () => {
-            document.documentElement.classList.toggle('compact-mode')
-            const isCompact = document.documentElement.classList.contains('compact-mode')
-            notificationsStore.showInfo(`Modo compacto ${isCompact ? 'activado' : 'desactivado'}`)
-        },
-
-        // Accesibilidad
-        toggleAccessibility: () => {
-            notificationsStore.showInfo('Panel de accesibilidad abierto')
-        },
-        toggleHighContrast: () => {
-            document.documentElement.classList.toggle('high-contrast')
-            const isHighContrast = document.documentElement.classList.contains('high-contrast')
-            notificationsStore.showInfo(`Alto contraste ${isHighContrast ? 'activado' : 'desactivado'}`)
-        },
-        toggleAnimations: () => {
-            document.documentElement.classList.toggle('no-animations')
-            const noAnimations = document.documentElement.classList.contains('no-animations')
-            notificationsStore.showInfo(`Animaciones ${noAnimations ? 'desactivadas' : 'activadas'}`)
+        {
+            id: 'action_refresh',
+            name: 'Actualizar',
+            description: 'Actualizar los datos de la vista actual',
+            action: 'refresh',
+            category: 'actions',
+            keys: ['F5'],
+            enabled: true,
+            usageCount: 0
         },
 
         // Sistema
-        refresh: () => {
-            window.location.reload()
+        {
+            id: 'system_help',
+            name: 'Ayuda',
+            description: 'Mostrar la ayuda del sistema',
+            action: 'help',
+            category: 'system',
+            keys: ['F1'],
+            enabled: true,
+            usageCount: 0
         },
-        logout: () => {
-            if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
-                authStore.logout()
-                router.push('/login')
-            }
+        {
+            id: 'system_print',
+            name: 'Imprimir',
+            description: 'Imprimir la vista actual',
+            action: 'print',
+            category: 'system',
+            keys: ['Ctrl', 'P'],
+            enabled: true,
+            usageCount: 0
         },
-        print: () => {
-            window.print()
+        {
+            id: 'system_export',
+            name: 'Exportar',
+            description: 'Exportar datos de la vista actual',
+            action: 'export',
+            category: 'system',
+            keys: ['Ctrl', 'Shift', 'E'],
+            enabled: true,
+            usageCount: 0
+        },
+        {
+            id: 'system_fullscreen',
+            name: 'Pantalla Completa',
+            description: 'Alternar modo pantalla completa',
+            action: 'fullscreen',
+            category: 'system',
+            keys: ['F11'],
+            enabled: true,
+            usageCount: 0
+        },
+        {
+            id: 'system_close',
+            name: 'Cerrar',
+            description: 'Cerrar la ventana o modal actual',
+            action: 'close',
+            category: 'system',
+            keys: ['Escape'],
+            enabled: true,
+            usageCount: 0
+        },
+
+        // Reportes
+        {
+            id: 'report_generate',
+            name: 'Generar Reporte',
+            description: 'Generar un nuevo reporte',
+            action: 'generate_report',
+            category: 'reports',
+            keys: ['Ctrl', 'R'],
+            enabled: true,
+            usageCount: 0
+        },
+        {
+            id: 'report_export_pdf',
+            name: 'Exportar PDF',
+            description: 'Exportar reporte en formato PDF',
+            action: 'export_pdf',
+            category: 'reports',
+            keys: ['Ctrl', 'Shift', 'P'],
+            enabled: true,
+            usageCount: 0
+        },
+        {
+            id: 'report_export_excel',
+            name: 'Exportar Excel',
+            description: 'Exportar reporte en formato Excel',
+            action: 'export_excel',
+            category: 'reports',
+            keys: ['Ctrl', 'Shift', 'X'],
+            enabled: true,
+            usageCount: 0
+        },
+        {
+            id: 'report_schedule',
+            name: 'Programar Reporte',
+            description: 'Programar la generación automática de un reporte',
+            action: 'schedule_report',
+            category: 'reports',
+            keys: ['Ctrl', 'Shift', 'S'],
+            enabled: true,
+            usageCount: 0
+        },
+
+        // Tickets
+        {
+            id: 'ticket_new',
+            name: 'Nuevo Ticket',
+            description: 'Crear un nuevo ticket de venta',
+            action: 'new_ticket',
+            category: 'tickets',
+            keys: ['Ctrl', 'T'],
+            enabled: true,
+            usageCount: 0
+        },
+        {
+            id: 'ticket_duplicate',
+            name: 'Duplicar Ticket',
+            description: 'Duplicar el ticket seleccionado',
+            action: 'duplicate_ticket',
+            category: 'tickets',
+            keys: ['Ctrl', 'D'],
+            enabled: true,
+            usageCount: 0
+        },
+        {
+            id: 'ticket_print',
+            name: 'Imprimir Ticket',
+            description: 'Imprimir el ticket seleccionado',
+            action: 'print_ticket',
+            category: 'tickets',
+            keys: ['Ctrl', 'Shift', 'P'],
+            enabled: true,
+            usageCount: 0
+        },
+        {
+            id: 'ticket_cancel',
+            name: 'Cancelar Ticket',
+            description: 'Cancelar el ticket seleccionado',
+            action: 'cancel_ticket',
+            category: 'tickets',
+            keys: ['Ctrl', 'Shift', 'C'],
+            enabled: true,
+            usageCount: 0
+        },
+
+        // Usuarios
+        {
+            id: 'user_new',
+            name: 'Nuevo Usuario',
+            description: 'Crear un nuevo usuario',
+            action: 'new_user',
+            category: 'users',
+            keys: ['Ctrl', 'Shift', 'U'],
+            enabled: true,
+            usageCount: 0
+        },
+        {
+            id: 'user_activate',
+            name: 'Activar Usuario',
+            description: 'Activar el usuario seleccionado',
+            action: 'activate_user',
+            category: 'users',
+            keys: ['Ctrl', 'Shift', 'A'],
+            enabled: true,
+            usageCount: 0
+        },
+        {
+            id: 'user_deactivate',
+            name: 'Desactivar Usuario',
+            description: 'Desactivar el usuario seleccionado',
+            action: 'deactivate_user',
+            category: 'users',
+            keys: ['Ctrl', 'Shift', 'D'],
+            enabled: true,
+            usageCount: 0
+        },
+        {
+            id: 'user_reset_password',
+            name: 'Resetear Contraseña',
+            description: 'Resetear la contraseña del usuario seleccionado',
+            action: 'reset_password',
+            category: 'users',
+            keys: ['Ctrl', 'Shift', 'R'],
+            enabled: true,
+            usageCount: 0
         }
-    }
+    ]
 
-    // Registrar atajo
-    const registerShortcut = (key, action, description, category) => {
-        shortcuts.value.set(key, { action, description, category })
-    }
+    // Getters
+    const enabledShortcuts = computed(() =>
+        shortcuts.value.filter(s => s.enabled)
+    )
 
-    // Desregistrar atajo
-    const unregisterShortcut = (key) => {
-        shortcuts.value.delete(key)
-    }
-
-    // Verificar si una combinación de teclas coincide
-    const checkShortcut = (keys) => {
-        const keyString = Array.from(keys).sort().join('+')
-        const shortcut = shortcuts.value.get(keyString)
-
-        if (shortcut && actions[shortcut.action]) {
-            try {
-                actions[shortcut.action]()
-                notificationsStore.showSuccess(`Atajo ejecutado: ${shortcut.description}`)
-            } catch (error) {
-                console.error('Error ejecutando atajo:', error)
-                notificationsStore.showError('Error ejecutando atajo')
-            }
-        }
-    }
-
-    // Manejar eventos de teclado
-    const handleKeyDown = (event) => {
-        if (!isEnabled.value) return
-
-        // Ignorar eventos en campos de entrada
-        if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA' || event.target.isContentEditable) {
-            return
-        }
-
-        const key = event.key.toLowerCase()
-        const modifiers = []
-
-        if (event.ctrlKey) modifiers.push('ctrl')
-        if (event.shiftKey) modifiers.push('shift')
-        if (event.altKey) modifiers.push('alt')
-        if (event.metaKey) modifiers.push('meta')
-
-        // Agregar tecla principal
-        if (key !== 'control' && key !== 'shift' && key !== 'alt' && key !== 'meta') {
-            modifiers.push(key)
-        }
-
-        pressedKeys.value = new Set(modifiers)
-        checkShortcut(pressedKeys.value)
-    }
-
-    const handleKeyUp = (event) => {
-        const key = event.key.toLowerCase()
-
-        if (key === 'control' || key === 'shift' || key === 'alt' || key === 'meta') {
-            pressedKeys.value.clear()
-        }
-    }
-
-    // Inicializar atajos
-    const initializeShortcuts = () => {
-        // Registrar atajos por defecto
-        Object.entries(defaultShortcuts).forEach(([key, config]) => {
-            registerShortcut(key, config.action, config.description, config.category)
-        })
-
-        // Agregar event listeners
-        document.addEventListener('keydown', handleKeyDown)
-        document.addEventListener('keyup', handleKeyUp)
-    }
-
-    // Limpiar event listeners
-    const cleanupShortcuts = () => {
-        document.removeEventListener('keydown', handleKeyDown)
-        document.removeEventListener('keyup', handleKeyUp)
-    }
-
-    // Obtener atajos por categoría
     const shortcutsByCategory = computed(() => {
         const categorized = {}
-
-        shortcuts.value.forEach((shortcut, key) => {
+        shortcuts.value.forEach(shortcut => {
             if (!categorized[shortcut.category]) {
                 categorized[shortcut.category] = []
             }
-            categorized[shortcut.category].push({
-                key,
-                ...shortcut
-            })
+            categorized[shortcut.category].push(shortcut)
         })
-
         return categorized
     })
 
-    // Habilitar/deshabilitar atajos
-    const toggleShortcuts = () => {
+    const shortcutsByAction = computed(() => {
+        const byAction = {}
+        shortcuts.value.forEach(shortcut => {
+            if (!byAction[shortcut.action]) {
+                byAction[shortcut.action] = []
+            }
+            byAction[shortcut.action].push(shortcut)
+        })
+        return byAction
+    })
+
+    const totalShortcuts = computed(() => shortcuts.value.length)
+    const activeShortcuts = computed(() => shortcuts.value.filter(s => s.enabled).length)
+
+    // Acciones
+    const initializeShortcuts = () => {
+        const saved = localStorage.getItem('keyboard_shortcuts')
+        if (saved) {
+            try {
+                shortcuts.value = JSON.parse(saved)
+            } catch (error) {
+                console.error('Error loading shortcuts:', error)
+                shortcuts.value = [...defaultShortcuts]
+            }
+        } else {
+            shortcuts.value = [...defaultShortcuts]
+        }
+    }
+
+    const saveShortcuts = () => {
+        localStorage.setItem('keyboard_shortcuts', JSON.stringify(shortcuts.value))
+    }
+
+    const updateShortcut = (shortcutId, newKeys) => {
+        const shortcut = shortcuts.value.find(s => s.id === shortcutId)
+        if (shortcut) {
+            shortcut.keys = newKeys
+            saveShortcuts()
+        }
+    }
+
+    const toggleShortcut = (shortcutId) => {
+        const shortcut = shortcuts.value.find(s => s.id === shortcutId)
+        if (shortcut) {
+            shortcut.enabled = !shortcut.enabled
+            saveShortcuts()
+        }
+    }
+
+    const resetToDefault = () => {
+        shortcuts.value = [...defaultShortcuts]
+        saveShortcuts()
+    }
+
+    const addShortcut = (shortcut) => {
+        const newShortcut = {
+            id: `custom_${Date.now()}`,
+            enabled: true,
+            usageCount: 0,
+            ...shortcut
+        }
+        shortcuts.value.push(newShortcut)
+        saveShortcuts()
+        return newShortcut
+    }
+
+    const removeShortcut = (shortcutId) => {
+        shortcuts.value = shortcuts.value.filter(s => s.id !== shortcutId)
+        saveShortcuts()
+    }
+
+    const duplicateShortcut = (shortcutId) => {
+        const shortcut = shortcuts.value.find(s => s.id === shortcutId)
+        if (shortcut) {
+            const duplicated = {
+                ...shortcut,
+                id: `copy_${Date.now()}`,
+                name: `${shortcut.name} (Copia)`,
+                keys: [...shortcut.keys]
+            }
+            shortcuts.value.push(duplicated)
+            saveShortcuts()
+            return duplicated
+        }
+    }
+
+    const incrementUsage = (shortcutId) => {
+        const shortcut = shortcuts.value.find(s => s.id === shortcutId)
+        if (shortcut) {
+            shortcut.usageCount = (shortcut.usageCount || 0) + 1
+            saveShortcuts()
+        }
+    }
+
+    const getShortcutByKeys = (keys) => {
+        if (!keys || keys.length === 0) return null
+
+        const normalizedKeys = keys.sort()
+        return shortcuts.value.find(shortcut => {
+            if (!shortcut.enabled || !shortcut.keys) return false
+            const shortcutKeys = [...shortcut.keys].sort()
+            return JSON.stringify(normalizedKeys) === JSON.stringify(shortcutKeys)
+        })
+    }
+
+    const executeShortcut = (shortcutId) => {
+        const shortcut = shortcuts.value.find(s => s.id === shortcutId)
+        if (shortcut && shortcut.enabled) {
+            incrementUsage(shortcutId)
+
+            // Emitir evento para que la aplicación maneje la acción
+            window.dispatchEvent(new CustomEvent('shortcutExecuted', {
+                detail: {
+                    shortcut,
+                    timestamp: new Date().toISOString()
+                }
+            }))
+
+            return shortcut
+        }
+        return null
+    }
+
+    const enableGlobalListener = () => {
+        if (globalListener.value) return
+
+        globalListener.value = (event) => {
+            if (!isEnabled.value) return
+
+            // Ignorar si está en un input o textarea
+            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(event.target.tagName)) {
+                return
+            }
+
+            const keys = []
+            if (event.ctrlKey) keys.push('Ctrl')
+            if (event.shiftKey) keys.push('Shift')
+            if (event.altKey) keys.push('Alt')
+            if (event.metaKey) keys.push('Meta')
+
+            // Agregar la tecla principal
+            if (event.key && !['Control', 'Shift', 'Alt', 'Meta'].includes(event.key)) {
+                keys.push(event.key)
+            }
+
+            if (keys.length > 0) {
+                const shortcut = getShortcutByKeys(keys)
+                if (shortcut) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                    executeShortcut(shortcut.id)
+                }
+            }
+        }
+
+        document.addEventListener('keydown', globalListener.value)
+    }
+
+    const disableGlobalListener = () => {
+        if (globalListener.value) {
+            document.removeEventListener('keydown', globalListener.value)
+            globalListener.value = null
+        }
+    }
+
+    const toggleGlobalListener = () => {
         isEnabled.value = !isEnabled.value
         localStorage.setItem('shortcuts_enabled', isEnabled.value)
 
         if (isEnabled.value) {
-            notificationsStore.showSuccess('Atajos de teclado habilitados')
+            enableGlobalListener()
         } else {
-            notificationsStore.showWarning('Atajos de teclado deshabilitados')
+            disableGlobalListener()
         }
     }
 
-    // Personalizar atajo
-    const customizeShortcut = (oldKey, newKey, action, description, category) => {
-        if (shortcuts.value.has(oldKey)) {
-            shortcuts.value.delete(oldKey)
-        }
-
-        registerShortcut(newKey, action, description, category)
-        notificationsStore.showSuccess('Atajo personalizado guardado')
-    }
-
-    // Exportar configuración de atajos
+    // Exportar/Importar
     const exportShortcuts = () => {
-        const config = {
-            shortcuts: Array.from(shortcuts.value.entries()),
-            enabled: isEnabled.value,
-            timestamp: new Date().toISOString()
-        }
+        const data = shortcuts.value.map(s => ({
+            id: s.id,
+            name: s.name,
+            description: s.description,
+            action: s.action,
+            category: s.category,
+            keys: s.keys,
+            enabled: s.enabled,
+            route: s.route
+        }))
 
-        const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' })
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
         const url = URL.createObjectURL(blob)
         const a = document.createElement('a')
         a.href = url
-        a.download = `shortcuts_config_${new Date().toISOString().split('T')[0]}.json`
+        a.download = `keyboard_shortcuts_${new Date().toISOString().split('T')[0]}.json`
         a.click()
         URL.revokeObjectURL(url)
     }
 
-    // Importar configuración de atajos
     const importShortcuts = (file) => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader()
             reader.onload = (e) => {
                 try {
-                    const config = JSON.parse(e.target.result)
+                    const data = JSON.parse(e.target.result)
 
-                    if (config.shortcuts) {
-                        shortcuts.value.clear()
-                        config.shortcuts.forEach(([key, shortcut]) => {
-                            registerShortcut(key, shortcut.action, shortcut.description, shortcut.category)
-                        })
+                    // Validar estructura
+                    if (!Array.isArray(data)) {
+                        throw new Error('Formato inválido: debe ser un array')
                     }
 
-                    if (typeof config.enabled === 'boolean') {
-                        isEnabled.value = config.enabled
-                    }
+                    // Validar cada shortcut
+                    data.forEach(shortcut => {
+                        if (!shortcut.id || !shortcut.name || !shortcut.action || !shortcut.category) {
+                            throw new Error('Estructura de shortcut inválida')
+                        }
+                    })
 
-                    notificationsStore.showSuccess('Configuración de atajos importada')
+                    // Reemplazar shortcuts existentes
+                    shortcuts.value = data.map(s => ({
+                        ...s,
+                        usageCount: s.usageCount || 0,
+                        enabled: s.enabled !== undefined ? s.enabled : true
+                    }))
+
+                    saveShortcuts()
                     resolve()
                 } catch (error) {
                     reject(error)
@@ -393,44 +569,60 @@ export const useShortcutsStore = defineStore('shortcuts', () => {
         })
     }
 
-    // Lifecycle
-    onMounted(() => {
-        // Cargar configuración guardada
+    // Inicialización
+    const initialize = () => {
         const savedEnabled = localStorage.getItem('shortcuts_enabled')
         if (savedEnabled !== null) {
             isEnabled.value = savedEnabled === 'true'
         }
 
         initializeShortcuts()
-    })
 
-    onUnmounted(() => {
-        cleanupShortcuts()
-    })
+        if (isEnabled.value) {
+            enableGlobalListener()
+        }
+    }
+
+    const cleanup = () => {
+        disableGlobalListener()
+    }
 
     return {
         // States
-        isEnabled,
-        showHelp,
-        pressedKeys,
         shortcuts,
+        isEnabled,
 
         // Getters
+        enabledShortcuts,
         shortcutsByCategory,
+        shortcutsByAction,
+        totalShortcuts,
+        activeShortcuts,
 
         // Acciones principales
-        registerShortcut,
-        unregisterShortcut,
-        toggleShortcuts,
-        customizeShortcut,
-
-        // Utilidades
         initializeShortcuts,
-        cleanupShortcuts,
+        saveShortcuts,
+        updateShortcut,
+        toggleShortcut,
+        resetToDefault,
+        addShortcut,
+        removeShortcut,
+        duplicateShortcut,
+        incrementUsage,
+        getShortcutByKeys,
+        executeShortcut,
+
+        // Listener global
+        enableGlobalListener,
+        disableGlobalListener,
+        toggleGlobalListener,
+
+        // Exportar/Importar
         exportShortcuts,
         importShortcuts,
 
-        // Acciones disponibles
-        actions
+        // Utilidades
+        initialize,
+        cleanup
     }
 })
