@@ -1,19 +1,15 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import axios from 'axios'
+import api from '../utils/api'
 
-// Configurar axios base URL
-axios.defaults.baseURL = 'http://localhost:8000'
+// Base URL provista por Vite en utils/api
 
 export const useAuthStore = defineStore('auth', () => {
     const user = ref(null)
     const token = ref(localStorage.getItem('token') || null)
     const isLoading = ref(false)
 
-    // Configurar axios con token si existe
-    if (token.value) {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token.value}`
-    }
+    // Token se adjunta vía interceptor en utils/api
 
     const isAuthenticated = computed(() => {
         // No considerar autenticado hasta que se complete la inicialización
@@ -33,7 +29,7 @@ export const useAuthStore = defineStore('auth', () => {
             console.log('Starting login process...')
 
             // Hacer petición real al backend
-            const response = await axios.post('/api/auth/token/', {
+            const response = await api.post('/auth/token/', {
                 username: credentials.username,
                 password: credentials.password
             })
@@ -47,7 +43,7 @@ export const useAuthStore = defineStore('auth', () => {
             localStorage.setItem('refreshToken', refresh)
 
             // Configurar axios con el nuevo token
-            axios.defaults.headers.common['Authorization'] = `Bearer ${access}`
+            // Se adjunta por interceptor en peticiones futuras
 
             // Obtener información del usuario
             await fetchUser()
@@ -79,7 +75,7 @@ export const useAuthStore = defineStore('auth', () => {
     const fetchUser = async () => {
         try {
             console.log('Fetching user data...')
-            const response = await axios.get('/api/auth/me/')
+            const response = await api.get('/auth/me/')
             user.value = response.data
             localStorage.setItem('user', JSON.stringify(response.data))
             console.log('User data fetched successfully:', response.data)
@@ -96,7 +92,7 @@ export const useAuthStore = defineStore('auth', () => {
         localStorage.removeItem('token')
         localStorage.removeItem('refreshToken')
         localStorage.removeItem('user')
-        delete axios.defaults.headers.common['Authorization']
+        // El interceptor omitirá Authorization si no hay token
     }
 
     const refreshToken = async () => {
@@ -107,14 +103,14 @@ export const useAuthStore = defineStore('auth', () => {
                 return false
             }
 
-            const response = await axios.post('/api/auth/token/refresh/', {
+            const response = await api.post('/auth/token/refresh/', {
                 refresh
             })
 
             const { access } = response.data
             token.value = access
             localStorage.setItem('token', access)
-            axios.defaults.headers.common['Authorization'] = `Bearer ${access}`
+            // Se adjunta por interceptor
 
             return true
         } catch (error) {

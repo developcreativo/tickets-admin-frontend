@@ -1,332 +1,508 @@
-# 🎫 Sistema de Emisión de Tickets - Frontend
+# 🎟️ Tickets Admin Frontend
 
-Un sistema administrativo moderno y completo para la gestión de tickets de venta, construido con Vue 3, Pinia y Tailwind CSS.
+Frontend Vue.js 3 con Composition API para el sistema de gestión de tickets. Interfaz moderna y responsive para administradores.
 
-## ✨ Características Principales
+## 📋 Características
 
-### 🎨 **Sistema de Temas Avanzado**
-- **8 Temas Predefinidos**: Claro, Oscuro, Azul Profesional, Verde Naturaleza, Púrpura Creativo, Atardecer, Océano y Medianoche
-- **Personalización de Colores**: 12 colores primarios y de acento disponibles
-- **Estilos de Sidebar**: 8 estilos diferentes incluyendo cristal y gradientes
-- **Tamaños de Fuente**: 5 opciones desde pequeño hasta extra grande
-- **Modo Compacto**: Reduce espaciado para mayor densidad de información
-- **Alto Contraste**: Mejora la accesibilidad visual
-- **Sin Animaciones**: Opción para usuarios sensibles al movimiento
-- **Exportar/Importar**: Guarda y comparte configuraciones de tema
+### ✅ Implementado en Fase 2
+- **Vue.js 3 + Composition API**: Arquitectura moderna y reactiva
+- **Pinia State Management**: Gestión de estado centralizada
+- **Vue Router 4**: Navegación SPA con guards de autenticación
+- **Tailwind CSS**: Framework CSS utility-first
+- **Heroicons**: Iconografía consistente
+- **Vite**: Build tool moderno y rápido
+- **Dark Mode**: Soporte completo para modo oscuro
+- **Responsive Design**: Adaptable a todos los dispositivos
+- **Componentes Reutilizables**: Librería de componentes UI
+- **Tests Unitarios**: Cobertura de tests con Vitest
+- **TypeScript**: Tipado estático (opcional)
 
-### ⌨️ **Atajos de Teclado Personalizables**
-- **Categorías Organizadas**: Navegación, Acciones, Sistema, Reportes, Tickets, Usuarios
-- **Atajos por Defecto**: 40+ atajos preconfigurados para todas las funciones
-- **Editor Visual**: Interfaz intuitiva para personalizar combinaciones de teclas
-- **Estadísticas de Uso**: Seguimiento de frecuencia y tiempo ahorrado
-- **Gestión de Estado**: Activar/desactivar atajos individuales
-- **Exportar/Importar**: Backup y restauración de configuraciones
+### 🎨 Componentes Principales
 
-### 📱 **Modo Offline Completo**
-- **Detección Automática**: Monitorea estado de conexión en tiempo real
-- **Almacenamiento Local**: IndexedDB para datos críticos
-- **Cola de Sincronización**: Gestiona operaciones pendientes
-- **Sincronización Inteligente**: Prioriza datos importantes
-- **Configuración Avanzada**: Intervalos, timeouts y reintentos personalizables
-- **Historial de Sincronización**: Auditoría completa de operaciones
+#### Layout y Navegación
+- `AdminLayout.vue`: Layout principal con sidebar y header
+- `Sidebar.vue`: Navegación lateral responsive
+- `Header.vue`: Header con notificaciones y perfil de usuario
+- `Breadcrumb.vue`: Navegación de breadcrumbs
 
-### 🔔 **Sistema de Notificaciones Avanzado**
-- **Tipos Múltiples**: In-app, toast, push del navegador
-- **Categorías**: Tickets, Usuarios, Sistema, Seguridad, Reportes
-- **Prioridades**: Baja, Media, Alta, Crítica
-- **Preferencias del Usuario**: Control granular por categoría
-- **Sonidos y Vibración**: Alertas auditivas personalizables
-- **Notificaciones Push**: Integración con API del navegador
-- **Estadísticas**: Análisis de uso y patrones
+#### Gestión de Contenido
+- `DashboardView.vue`: Dashboard principal con métricas
+- `CatalogView.vue`: Gestión de catálogos (zonas, tipos de sorteo)
+- `TicketsView.vue`: Gestión y emisión de tickets
+- `UsersView.vue`: Gestión de usuarios y permisos
+- `ReportsView.vue`: Reportes y análisis
+- `SettingsView.vue`: Configuración del sistema
 
-### 📊 **Dashboard en Tiempo Real**
-- **Métricas Dinámicas**: Actualización automática cada 30 segundos
-- **Gráficos Interactivos**: Chart.js para visualizaciones avanzadas
-- **Filtros Temporales**: Períodos personalizables para análisis
-- **Alertas Críticas**: Notificaciones de eventos importantes
-- **Métricas de Rendimiento**: Uptime, tiempo de respuesta, throughput
-- **Auto-refresh**: Configurable y pausable
+#### Componentes UI
+- `ActionButtons.vue`: Botones de acción para tablas
+- `DataTable.vue`: Tabla de datos con paginación
+- `Modal.vue`: Modales reutilizables
+- `NotificationCenter.vue`: Centro de notificaciones
+- `ThemeCustomizer.vue`: Personalización de temas
 
-### 📈 **Reportes y Exportación**
-- **Múltiples Formatos**: PDF, Excel, CSV, JSON, XML
-- **Templates Personalizables**: Diseños reutilizables
-- **Programación**: Exportación automática por horarios
-- **Cache Inteligente**: Redis para optimización de rendimiento
-- **Filtros Avanzados**: Por fecha, zona, tipo de sorteo, usuario
-- **Historial de Exportaciones**: Seguimiento completo
+#### Formularios
+- `TicketForm.vue`: Formulario de emisión de tickets
+- `UserForm.vue`: Formulario de gestión de usuarios
+- `CatalogForm.vue`: Formularios de catálogo
+- `ReportFilters.vue`: Filtros para reportes
 
-### 🔍 **Auditoría y Logs del Sistema**
-- **Categorización**: Info, Warning, Error, Critical
-- **Filtros Avanzados**: Por usuario, acción, recurso, período
-- **Estadísticas**: Análisis de patrones y tendencias
-- **Exportación**: Múltiples formatos para análisis externo
-- **Retención Configurable**: Políticas de limpieza automática
-- **Búsqueda Semántica**: Encuentra eventos específicos rápidamente
-
-## 🚀 Tecnologías Utilizadas
-
-### Frontend
-- **Vue 3** - Framework progresivo con Composition API
-- **Pinia** - Gestión de estado moderna y tipada
-- **Vue Router** - Enrutamiento del lado del cliente
-- **Tailwind CSS** - Framework CSS utility-first
-- **Chart.js** - Gráficos interactivos y responsivos
-- **Heroicons** - Iconografía SVG de alta calidad
-
-### Backend
-- **Django** - Framework web Python robusto
-- **Django REST Framework** - API RESTful completa
-- **Django Simple JWT** - Autenticación segura
-- **Redis** - Cache en memoria y colas
-- **PostgreSQL** - Base de datos relacional
-
-### Herramientas de Desarrollo
-- **Vite** - Build tool moderno y rápido
-- **ESLint** - Linting de código JavaScript
-- **Prettier** - Formateo automático de código
-- **Docker** - Containerización y despliegue
-
-## 📦 Instalación
+## 🚀 Instalación y Configuración
 
 ### Prerrequisitos
 - Node.js 18+ 
-- npm 9+
-- Docker y Docker Compose
+- npm o yarn
+- Backend Django corriendo en `http://localhost:8000`
 
-### 1. Clonar el Repositorio
+### Instalación
+
 ```bash
+# Clonar repositorio
 git clone <repository-url>
 cd tickets-admin-frontend
-```
 
-### 2. Instalar Dependencias
-```bash
+# Instalar dependencias
 npm install
-```
 
-### 3. Configurar Variables de Entorno
-```bash
-cp .env.example .env
-# Editar .env con tus configuraciones
+# Configurar variables de entorno
+cp .env.example .env.local
 ```
-
-### 4. Iniciar el Backend
-```bash
-cd ../emision-tickets
-docker-compose up -d
-```
-
-### 5. Ejecutar el Frontend
-```bash
-npm run dev
-```
-
-## 🔧 Configuración
 
 ### Variables de Entorno
+
 ```env
-VITE_API_BASE_URL=http://localhost:8000
-VITE_APP_TITLE=Sistema de Emisión de Tickets
-VITE_APP_VERSION=1.0.0
+# .env.local
+VITE_API_BASE_URL=http://localhost:8000/api
+VITE_APP_TITLE=Tickets Admin
+VITE_APP_VERSION=2.0.0
 ```
 
-### Configuración de Temas
-Los temas se configuran automáticamente desde el panel de configuración:
-- Navega a **Configuración > Temas**
-- Selecciona un tema predefinido
-- Personaliza colores y estilos
-- Guarda configuraciones personalizadas
+### Desarrollo
 
-### Configuración de Atajos
-- Navega a **Configuración > Atajos de Teclado**
-- Haz clic en cualquier atajo para editarlo
-- Presiona la combinación de teclas deseada
-- Los cambios se guardan automáticamente
+```bash
+# Servidor de desarrollo
+npm run dev
 
-## 📱 Uso
+# Build para producción
+npm run build
 
-### Autenticación
-- **Usuario por defecto**: `admin`
-- **Contraseña**: `admin1234`
-- **JWT**: Renovación automática de tokens
+# Preview de producción
+npm run preview
 
-### Navegación Principal
-- **Dashboard**: Vista general del sistema
-- **Catálogo**: Gestión de zonas, tipos de sorteo y horarios
-- **Usuarios**: Administración de usuarios y roles
-- **Tickets**: Creación y gestión de tickets de venta
-- **Reportes**: Generación y exportación de datos
-- **Configuración**: Personalización del sistema
+# Tests
+npm run test
+npm run test:ui
+```
 
-### Funcionalidades Avanzadas
+## 🏗️ Arquitectura
 
-#### Modo Offline
-1. El sistema detecta automáticamente la pérdida de conexión
-2. Los datos se almacenan localmente
-3. Las operaciones se encolan para sincronización posterior
-4. Al reconectar, se sincronizan automáticamente
+### Estructura de Directorios
 
-#### Notificaciones
-1. Configura preferencias por categoría
-2. Habilita notificaciones push del navegador
-3. Personaliza sonidos y alertas
-4. Revisa estadísticas de uso
+```
+src/
+├── components/          # Componentes reutilizables
+│   ├── layout/         # Componentes de layout
+│   ├── ui/            # Componentes UI básicos
+│   ├── forms/         # Componentes de formularios
+│   ├── theme/         # Componentes de temas
+│   ├── notifications/ # Sistema de notificaciones
+│   └── shortcuts/     # Atajos de teclado
+├── views/             # Vistas principales
+├── stores/            # Stores de Pinia
+├── router/            # Configuración de rutas
+├── composables/       # Composables personalizados
+├── utils/             # Utilidades
+├── assets/            # Recursos estáticos
+└── styles/            # Estilos globales
+```
 
-#### Temas
-1. Selecciona un tema base
-2. Personaliza colores primarios y de acento
-3. Ajusta estilos de sidebar
-4. Configura modo compacto y alto contraste
+### Stores de Pinia
 
-## 🎯 Características de Accesibilidad
+#### Auth Store (`stores/auth.js`)
+```javascript
+// Gestión de autenticación
+const authStore = useAuthStore()
 
-- **Navegación por Teclado**: Todos los elementos son accesibles via teclado
-- **Alto Contraste**: Modo especial para usuarios con problemas visuales
-- **Reducción de Movimiento**: Respeta preferencias del sistema
-- **Screen Readers**: Compatible con lectores de pantalla
-- **Focus Management**: Indicadores visuales claros de foco
-- **Responsive Design**: Funciona en todos los tamaños de pantalla
+// Login
+await authStore.login(credentials)
 
-## 🔒 Seguridad
+// Verificar autenticación
+if (authStore.isAuthenticated) {
+  // Usuario autenticado
+}
 
-- **JWT Tokens**: Autenticación segura y renovable
-- **HTTPS**: Comunicación encriptada
-- **Validación de Entrada**: Sanitización de datos del usuario
-- **CSRF Protection**: Protección contra ataques cross-site
-- **Rate Limiting**: Prevención de abuso de API
-- **Auditoría**: Logs completos de todas las acciones
+// Logout
+authStore.logout()
+```
 
-## 📊 Rendimiento
+#### Theme Store (`stores/theme.js`)
+```javascript
+// Gestión de temas
+const themeStore = useThemeStore()
 
-- **Lazy Loading**: Carga de componentes bajo demanda
-- **Cache Inteligente**: Redis para datos frecuentemente accedidos
-- **Code Splitting**: División automática de bundles
-- **Tree Shaking**: Eliminación de código no utilizado
-- **Image Optimization**: Compresión automática de imágenes
-- **Service Workers**: Cache offline para recursos estáticos
+// Cambiar tema
+themeStore.setTheme('dark')
+
+// Toggle modo oscuro
+themeStore.toggleDarkMode()
+
+// Obtener tema actual
+console.log(themeStore.currentTheme)
+```
+
+#### Notifications Store (`stores/notifications.js`)
+```javascript
+// Gestión de notificaciones
+const notificationsStore = useNotificationsStore()
+
+// Agregar notificación
+notificationsStore.addNotification({
+  type: 'success',
+  message: 'Ticket creado exitosamente'
+})
+
+// Limpiar notificaciones
+notificationsStore.clearNotifications()
+```
+
+## 🎨 Sistema de Temas
+
+### Temas Predefinidos
+- **Light**: Tema claro por defecto
+- **Dark**: Tema oscuro
+- **Midnight**: Tema oscuro con acentos azules
+- **Sunset**: Tema cálido con acentos naranjas
+- **Ocean**: Tema azul marino
+
+### Personalización
+```javascript
+// En ThemeCustomizer.vue
+const customTheme = {
+  name: 'Custom Theme',
+  colors: {
+    primary: '#3B82F6',
+    secondary: '#6B7280',
+    accent: '#F59E0B',
+    background: '#FFFFFF',
+    surface: '#F9FAFB',
+    text: '#111827'
+  }
+}
+
+themeStore.createCustomTheme(customTheme)
+```
+
+### CSS Variables
+```css
+:root {
+  --color-primary: #3B82F6;
+  --color-secondary: #6B7280;
+  --color-background: #FFFFFF;
+  --color-surface: #F9FAFB;
+  --color-text: #111827;
+  --color-border: #E5E7EB;
+}
+```
+
+## 🔧 Componentes Reutilizables
+
+### ActionButtons
+```vue
+<template>
+  <ActionButtons 
+    :show-edit="true"
+    :show-delete="true"
+    :is-active="item.is_active"
+    @edit="editItem(item)"
+    @delete="deleteItem(item.id)"
+  />
+</template>
+```
+
+### DataTable
+```vue
+<template>
+  <DataTable 
+    :data="tickets"
+    :columns="columns"
+    :loading="loading"
+    :pagination="pagination"
+    @page-change="handlePageChange"
+  />
+</template>
+```
+
+### Modal
+```vue
+<template>
+  <Modal 
+    v-model:open="showModal"
+    title="Crear Ticket"
+    size="lg"
+  >
+    <TicketForm @submit="handleSubmit" />
+  </Modal>
+</template>
+```
+
+## 🔐 Autenticación y Autorización
+
+### Guards de Router
+```javascript
+// router/index.js
+const routes = [
+  {
+    path: '/',
+    component: AdminLayout,
+    meta: { requiresAuth: true },
+    children: [
+      // Rutas protegidas
+    ]
+  }
+]
+```
+
+### Interceptor de Axios
+```javascript
+// utils/api.js
+api.interceptors.request.use(config => {
+  const token = authStore.token
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  return config
+})
+```
+
+## 📱 Responsive Design
+
+### Breakpoints
+- **Mobile**: < 640px
+- **Tablet**: 640px - 1024px
+- **Desktop**: > 1024px
+
+### Componentes Responsive
+```vue
+<template>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <!-- Contenido adaptable -->
+  </div>
+</template>
+```
 
 ## 🧪 Testing
 
-### Ejecutar Tests
+### Tests Unitarios
 ```bash
-# Tests unitarios
-npm run test:unit
+# Ejecutar tests
+npm run test
 
-# Tests de integración
-npm run test:integration
+# Tests con UI
+npm run test:ui
 
-# Tests E2E
-npm run test:e2e
-
-# Cobertura de código
+# Cobertura
 npm run test:coverage
 ```
 
-### Estructura de Tests
-```
-tests/
-├── unit/           # Tests unitarios
-├── integration/    # Tests de integración
-├── e2e/           # Tests end-to-end
-└── fixtures/      # Datos de prueba
+### Ejemplo de Test
+```javascript
+// tests/components/ActionButtons.test.js
+import { mount } from '@vue/test-utils'
+import ActionButtons from '@/components/ui/ActionButtons.vue'
+
+describe('ActionButtons', () => {
+  it('emits edit event when edit button is clicked', async () => {
+    const wrapper = mount(ActionButtons, {
+      props: { showEdit: true }
+    })
+    
+    await wrapper.find('[data-test="edit-button"]').trigger('click')
+    
+    expect(wrapper.emitted('edit')).toBeTruthy()
+  })
+})
 ```
 
-## 🚀 Despliegue
+## 🚀 Deployment
 
-### Producción
+### Build de Producción
 ```bash
+# Build optimizado
 npm run build
-npm run preview
+
+# Los archivos se generan en dist/
 ```
 
 ### Docker
-```bash
-docker build -t tickets-admin-frontend .
-docker run -p 3000:80 tickets-admin-frontend
+```dockerfile
+# Dockerfile
+FROM node:18-alpine as build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+RUN npm run build
+
+FROM nginx:alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/nginx.conf
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
 ```
 
-### Variables de Producción
-```env
-NODE_ENV=production
-VITE_API_BASE_URL=https://api.tuempresa.com
-VITE_APP_TITLE=Sistema de Tickets - Producción
+### Nginx Configuration
+```nginx
+# nginx.conf
+server {
+    listen 80;
+    server_name localhost;
+    root /usr/share/nginx/html;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    location /api {
+        proxy_pass http://backend:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
 ```
 
-## 📈 Monitoreo y Logs
+## 🔄 Integración con Backend
 
-### Métricas del Sistema
-- **Uptime**: Disponibilidad del sistema
-- **Response Time**: Tiempo de respuesta de la API
-- **Error Rate**: Tasa de errores
-- **User Activity**: Actividad de usuarios
-- **Cache Hit Rate**: Efectividad del cache
+### API Endpoints
+```javascript
+// utils/api.js
+const api = {
+  // Autenticación
+  auth: {
+    login: (credentials) => axios.post('/auth/token/', credentials),
+    refresh: (token) => axios.post('/auth/token/refresh/', { refresh: token }),
+    logout: () => axios.post('/auth/logout/')
+  },
+  
+  // Catálogos
+  catalog: {
+    zones: () => axios.get('/catalog/zones/'),
+    drawTypes: () => axios.get('/catalog/draw-types/'),
+    schedules: () => axios.get('/catalog/schedules/')
+  },
+  
+  // Tickets
+  tickets: {
+    list: (params) => axios.get('/sales/tickets/', { params }),
+    create: (data) => axios.post('/sales/tickets/', data),
+    update: (id, data) => axios.put(`/sales/tickets/${id}/`, data),
+    delete: (id) => axios.delete(`/sales/tickets/${id}/`)
+  },
+  
+  // Reportes
+  reports: {
+    summary: (params) => axios.get('/sales/reports/summary/', { params }),
+    detailed: (params) => axios.get('/sales/reports/detailed/', { params }),
+    export: (params) => axios.get('/sales/reports/export/', { params })
+  }
+}
+```
 
-### Logs Estructurados
-- **Niveles**: Debug, Info, Warning, Error, Critical
-- **Categorías**: Auth, API, Database, Cache, System
-- **Contexto**: Usuario, IP, Timestamp, Acción
-- **Retención**: Configurable por nivel y categoría
+## 📊 Métricas y Monitoreo
+
+### Performance Monitoring
+```javascript
+// utils/performance.js
+export const trackPageView = (page) => {
+  // Analytics tracking
+}
+
+export const trackEvent = (event, data) => {
+  // Event tracking
+}
+```
+
+### Error Tracking
+```javascript
+// utils/error.js
+export const captureError = (error, context) => {
+  console.error('Error captured:', error, context)
+  // Send to error tracking service
+}
+```
+
+## 🛠️ Desarrollo
+
+### Scripts Disponibles
+```json
+{
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "lint": "eslint . --ext .vue,.js,.ts",
+    "lint:fix": "eslint . --ext .vue,.js,.ts --fix",
+    "format": "prettier --write .",
+    "type-check": "vue-tsc --noEmit"
+  }
+}
+```
+
+### Configuración de Vite
+```javascript
+// vite.config.js
+export default defineConfig({
+  plugins: [vue()],
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url))
+    }
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8000',
+        changeOrigin: true
+      }
+    }
+  }
+})
+```
 
 ## 🤝 Contribución
 
-### Guías de Contribución
-1. Fork el repositorio
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
+### Guidelines
+1. **Sigue el estilo de código**: ESLint + Prettier
+2. **Escribe tests**: Mantén cobertura > 80%
+3. **Usa TypeScript**: Para nuevos componentes
+4. **Documenta componentes**: JSDoc para props y eventos
+5. **Responsive first**: Diseña para mobile primero
 
-### Estándares de Código
-- **ESLint**: Configuración estricta de JavaScript
-- **Prettier**: Formateo automático de código
-- **Vue Style Guide**: Mejores prácticas de Vue 3
-- **TypeScript**: Tipado opcional para mejor mantenibilidad
+### Estructura de Commits
+```
+feat: add new ticket form component
+fix: resolve dark mode toggle issue
+docs: update component documentation
+test: add unit tests for ActionButtons
+refactor: improve theme system
+```
 
-## 📄 Licencia
+## 📞 Soporte
 
-Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
+### Recursos
+- [Vue.js 3 Documentation](https://vuejs.org/)
+- [Pinia Documentation](https://pinia.vuejs.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Vite Documentation](https://vitejs.dev/)
 
-## 🆘 Soporte
-
-### Documentación
-- **API Docs**: `/api/docs/` (Swagger UI)
-- **Component Library**: Storybook para componentes
-- **Guías de Usuario**: Documentación interactiva
-
-### Canales de Soporte
-- **Issues**: GitHub Issues para bugs y features
-- **Discussions**: GitHub Discussions para preguntas
-- **Wiki**: Documentación colaborativa
-- **Email**: soporte@tuempresa.com
-
-### Comunidad
-- **Slack**: Canal #tickets-system
-- **Discord**: Servidor de desarrolladores
-- **Meetups**: Eventos mensuales
-- **Blog**: Artículos técnicos y tutoriales
-
-## 🔮 Roadmap
-
-### Versión 1.1 (Q2 2024)
-- [ ] Integración con sistemas de pago
-- [ ] Reportes avanzados con ML
-- [ ] API GraphQL
-- [ ] PWA completa
-
-### Versión 1.2 (Q3 2024)
-- [ ] Multi-tenancy
-- [ ] Analytics avanzados
-- [ ] Integración con BI tools
-- [ ] Mobile app nativa
-
-### Versión 2.0 (Q4 2024)
-- [ ] Microservicios
-- [ ] Event sourcing
-- [ ] Machine Learning
-- [ ] Blockchain integration
+### Issues y Bugs
+- Revisar logs del navegador
+- Verificar configuración de API
+- Comprobar variables de entorno
+- Ejecutar tests para validar funcionalidad
 
 ---
 
-**Desarrollado con ❤️ por el equipo de desarrollo de [Tu Empresa]**
-
-*Para más información, visita [tuempresa.com](https://tuempresa.com)*
+**Estado: ✅ COMPLETADO - Fase 2 Frontend Vue.js 3 + Composition API**

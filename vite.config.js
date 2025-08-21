@@ -22,5 +22,14 @@ export default defineConfig({
         outDir: '../staticfiles/frontend',
         assetsDir: 'assets',
         emptyOutDir: true,
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    vue: ['vue', 'vue-router', 'pinia'],
+                    ui: ['@headlessui/vue', '@heroicons/vue'],
+                    charts: ['chart.js', 'vue-chartjs'],
+                },
+            },
+        },
     },
 })
