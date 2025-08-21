@@ -11,6 +11,9 @@ export const useThemeStore = defineStore('theme', () => {
     const compactMode = ref(false)
     const animations = ref(true)
     const highContrast = ref(false)
+    const darkMode = ref(false)
+    const customColors = ref({})
+    const savedThemes = ref([])
 
     // Temas predefinidos
     const themes = {
@@ -24,7 +27,11 @@ export const useThemeStore = defineStore('theme', () => {
                 text: '#111827',
                 textSecondary: '#6B7280',
                 border: '#E5E7EB',
-                accent: '#6366F1'
+                accent: '#6366F1',
+                success: '#10B981',
+                warning: '#F59E0B',
+                error: '#EF4444',
+                info: '#3B82F6'
             }
         },
         dark: {
@@ -37,7 +44,11 @@ export const useThemeStore = defineStore('theme', () => {
                 text: '#F9FAFB',
                 textSecondary: '#D1D5DB',
                 border: '#374151',
-                accent: '#818CF8'
+                accent: '#818CF8',
+                success: '#34D399',
+                warning: '#FBBF24',
+                error: '#F87171',
+                info: '#60A5FA'
             }
         },
         blue: {
@@ -50,7 +61,11 @@ export const useThemeStore = defineStore('theme', () => {
                 text: '#0F172A',
                 textSecondary: '#475569',
                 border: '#CBD5E1',
-                accent: '#3B82F6'
+                accent: '#3B82F6',
+                success: '#059669',
+                warning: '#D97706',
+                error: '#DC2626',
+                info: '#1E40AF'
             }
         },
         green: {
@@ -63,7 +78,11 @@ export const useThemeStore = defineStore('theme', () => {
                 text: '#064E3B',
                 textSecondary: '#374151',
                 border: '#D1FAE5',
-                accent: '#10B981'
+                accent: '#10B981',
+                success: '#059669',
+                warning: '#D97706',
+                error: '#DC2626',
+                info: '#059669'
             }
         },
         purple: {
@@ -76,7 +95,62 @@ export const useThemeStore = defineStore('theme', () => {
                 text: '#581C87',
                 textSecondary: '#374151',
                 border: '#E9D5FF',
-                accent: '#8B5CF6'
+                accent: '#8B5CF6',
+                success: '#059669',
+                warning: '#D97706',
+                error: '#DC2626',
+                info: '#7C3AED'
+            }
+        },
+        sunset: {
+            name: 'Atardecer',
+            colors: {
+                primary: '#F97316',
+                secondary: '#6B7280',
+                background: '#FEF7ED',
+                surface: '#FFFFFF',
+                text: '#7C2D12',
+                textSecondary: '#374151',
+                border: '#FED7AA',
+                accent: '#FB923C',
+                success: '#059669',
+                warning: '#D97706',
+                error: '#DC2626',
+                info: '#F97316'
+            }
+        },
+        ocean: {
+            name: 'Océano',
+            colors: {
+                primary: '#0891B2',
+                secondary: '#6B7280',
+                background: '#F0FDFA',
+                surface: '#FFFFFF',
+                text: '#164E63',
+                textSecondary: '#374151',
+                border: '#A7F3D0',
+                accent: '#06B6D4',
+                success: '#059669',
+                warning: '#D97706',
+                error: '#DC2626',
+                info: '#0891B2'
+            }
+        },
+        midnight: {
+            name: 'Medianoche',
+            colors: {
+                primary: '#1E293B',
+                secondary: '#64748B',
+                background: '#020617',
+                surface: '#0F172A',
+                text: '#F8FAFC',
+                textSecondary: '#CBD5E1',
+                border: '#334155',
+                accent: '#475569',
+                success: '#10B981',
+                warning: '#F59E0B',
+                error: '#EF4444',
+                info: '#3B82F6'
             }
         }
     }
@@ -90,7 +164,11 @@ export const useThemeStore = defineStore('theme', () => {
         orange: { name: 'Naranja', value: '#F59E0B' },
         teal: { name: 'Teal', value: '#14B8A6' },
         indigo: { name: 'Índigo', value: '#6366F1' },
-        pink: { name: 'Rosa', value: '#EC4899' }
+        pink: { name: 'Rosa', value: '#EC4899' },
+        yellow: { name: 'Amarillo', value: '#EAB308' },
+        cyan: { name: 'Cian', value: '#06B6D4' },
+        emerald: { name: 'Esmeralda', value: '#10B981' },
+        violet: { name: 'Violeta', value: '#8B5CF6' }
     }
 
     // Colores de acento disponibles
@@ -102,7 +180,11 @@ export const useThemeStore = defineStore('theme', () => {
         red: { name: 'Rojo', value: '#EF4444' },
         orange: { name: 'Naranja', value: '#F59E0B' },
         teal: { name: 'Teal', value: '#14B8A6' },
-        pink: { name: 'Rosa', value: '#EC4899' }
+        pink: { name: 'Rosa', value: '#EC4899' },
+        yellow: { name: 'Amarillo', value: '#EAB308' },
+        cyan: { name: 'Cian', value: '#06B6D4' },
+        emerald: { name: 'Esmeralda', value: '#10B981' },
+        violet: { name: 'Violeta', value: '#8B5CF6' }
     }
 
     // Estilos de sidebar disponibles
@@ -111,7 +193,10 @@ export const useThemeStore = defineStore('theme', () => {
         modern: { name: 'Moderno', class: 'bg-gradient-to-b from-blue-600 to-blue-800' },
         elegant: { name: 'Elegante', class: 'bg-gradient-to-b from-gray-900 to-gray-700' },
         colorful: { name: 'Colorido', class: 'bg-gradient-to-b from-purple-600 to-pink-600' },
-        minimal: { name: 'Minimalista', class: 'bg-white border-r border-gray-200' }
+        minimal: { name: 'Minimalista', class: 'bg-white border-r border-gray-200' },
+        glass: { name: 'Cristal', class: 'bg-white/80 backdrop-blur-md border-r border-white/20' },
+        dark: { name: 'Oscuro', class: 'bg-gray-900' },
+        light: { name: 'Claro', class: 'bg-gray-100' }
     }
 
     // Tamaños de fuente disponibles
@@ -119,7 +204,16 @@ export const useThemeStore = defineStore('theme', () => {
         small: { name: 'Pequeño', class: 'text-sm', scale: 0.875 },
         medium: { name: 'Mediano', class: 'text-base', scale: 1 },
         large: { name: 'Grande', class: 'text-lg', scale: 1.125 },
-        xlarge: { name: 'Extra Grande', class: 'text-xl', scale: 1.25 }
+        xlarge: { name: 'Extra Grande', class: 'text-xl', scale: 1.25 },
+        xxlarge: { name: 'Muy Grande', class: 'text-2xl', scale: 1.5 }
+    }
+
+    // Tipos de fuente disponibles
+    const fontFamilies = {
+        sans: { name: 'Sans Serif', class: 'font-sans', value: 'Inter, system-ui, sans-serif' },
+        serif: { name: 'Serif', class: 'font-serif', value: 'Georgia, serif' },
+        mono: { name: 'Monospace', class: 'font-mono', value: 'JetBrains Mono, monospace' },
+        display: { name: 'Display', class: 'font-display', value: 'Poppins, sans-serif' }
     }
 
     // Getters
@@ -128,6 +222,7 @@ export const useThemeStore = defineStore('theme', () => {
     const currentAccentColor = computed(() => accentColors[accentColor.value])
     const currentSidebarStyle = computed(() => sidebarStyles[sidebarStyle.value])
     const currentFontSize = computed(() => fontSizes[fontSize.value])
+    const currentFontFamily = computed(() => fontFamilies.sans)
 
     // CSS Variables para el tema
     const cssVariables = computed(() => {
@@ -147,8 +242,18 @@ export const useThemeStore = defineStore('theme', () => {
             '--color-text': theme.colors.text,
             '--color-text-secondary': theme.colors.textSecondary,
             '--color-border': theme.colors.border,
+            '--color-success': theme.colors.success,
+            '--color-warning': theme.colors.warning,
+            '--color-error': theme.colors.error,
+            '--color-info': theme.colors.info,
             '--font-size-base': currentFontSize.value.scale,
-            '--sidebar-style': currentSidebarStyle.value.class
+            '--font-family-base': currentFontFamily.value.value,
+            '--sidebar-style': currentSidebarStyle.value.class,
+            '--border-radius': compactMode.value ? '0.375rem' : '0.5rem',
+            '--spacing-unit': compactMode.value ? '0.75rem' : '1rem',
+            '--shadow-sm': compactMode.value ? '0 1px 2px 0 rgba(0, 0, 0, 0.05)' : '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+            '--shadow-md': compactMode.value ? '0 4px 6px -1px rgba(0, 0, 0, 0.1)' : '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+            '--shadow-lg': compactMode.value ? '0 10px 15px -3px rgba(0, 0, 0, 0.1)' : '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
         }
     })
 
@@ -193,6 +298,13 @@ export const useThemeStore = defineStore('theme', () => {
         }
     }
 
+    const setFontFamily = (familyName) => {
+        if (fontFamilies[familyName]) {
+            localStorage.setItem('fontFamily', familyName)
+            applyTheme()
+        }
+    }
+
     const toggleCompactMode = () => {
         compactMode.value = !compactMode.value
         localStorage.setItem('compactMode', compactMode.value)
@@ -208,6 +320,28 @@ export const useThemeStore = defineStore('theme', () => {
     const toggleHighContrast = () => {
         highContrast.value = !highContrast.value
         localStorage.setItem('highContrast', highContrast.value)
+        applyTheme()
+    }
+
+    const toggleDarkMode = () => {
+        darkMode.value = !darkMode.value
+        if (darkMode.value) {
+            setTheme('dark')
+        } else {
+            setTheme('light')
+        }
+        localStorage.setItem('darkMode', darkMode.value)
+    }
+
+    const setCustomColor = (colorName, colorValue) => {
+        customColors.value[colorName] = colorValue
+        localStorage.setItem('customColors', JSON.stringify(customColors.value))
+        applyTheme()
+    }
+
+    const resetCustomColors = () => {
+        customColors.value = {}
+        localStorage.removeItem('customColors')
         applyTheme()
     }
 
@@ -247,6 +381,28 @@ export const useThemeStore = defineStore('theme', () => {
 
         // Aplicar tamaño de fuente
         root.style.fontSize = `${currentFontSize.value.scale}rem`
+
+        // Aplicar familia de fuente
+        const fontFamily = localStorage.getItem('fontFamily')
+        if (fontFamily && fontFamilies[fontFamily]) {
+            root.style.fontFamily = fontFamilies[fontFamily].value
+        }
+
+        // Aplicar colores personalizados
+        Object.entries(customColors.value).forEach(([name, value]) => {
+            root.style.setProperty(`--color-${name}`, value)
+        })
+
+        // Emitir evento de cambio de tema
+        window.dispatchEvent(new CustomEvent('themeChanged', {
+            detail: {
+                theme: currentTheme.value,
+                primaryColor: primaryColor.value,
+                accentColor: accentColor.value,
+                compactMode: compactMode.value,
+                highContrast: highContrast.value
+            }
+        }))
     }
 
     // Funciones de utilidad para colores
@@ -272,6 +428,30 @@ export const useThemeStore = defineStore('theme', () => {
             (B > 255 ? 255 : B < 0 ? 0 : B)).toString(16).slice(1)
     }
 
+    const generateColorPalette = (baseColor) => {
+        return {
+            50: lightenColor(baseColor, 50),
+            100: lightenColor(baseColor, 40),
+            200: lightenColor(baseColor, 30),
+            300: lightenColor(baseColor, 20),
+            400: lightenColor(baseColor, 10),
+            500: baseColor,
+            600: darkenColor(baseColor, 10),
+            700: darkenColor(baseColor, 20),
+            800: darkenColor(baseColor, 30),
+            900: darkenColor(baseColor, 40)
+        }
+    }
+
+    const getContrastColor = (backgroundColor) => {
+        const hex = backgroundColor.replace('#', '')
+        const r = parseInt(hex.substr(0, 2), 16)
+        const g = parseInt(hex.substr(2, 2), 16)
+        const b = parseInt(hex.substr(4, 2), 16)
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000
+        return brightness > 128 ? '#000000' : '#FFFFFF'
+    }
+
     // Inicializar tema
     const initializeTheme = () => {
         // Cargar configuraciones guardadas
@@ -283,6 +463,8 @@ export const useThemeStore = defineStore('theme', () => {
         const savedCompactMode = localStorage.getItem('compactMode')
         const savedAnimations = localStorage.getItem('animations')
         const savedHighContrast = localStorage.getItem('highContrast')
+        const savedDarkMode = localStorage.getItem('darkMode')
+        const savedCustomColors = localStorage.getItem('customColors')
 
         if (savedTheme) currentTheme.value = savedTheme
         if (savedPrimaryColor) primaryColor.value = savedPrimaryColor
@@ -292,6 +474,8 @@ export const useThemeStore = defineStore('theme', () => {
         if (savedCompactMode !== null) compactMode.value = savedCompactMode === 'true'
         if (savedAnimations !== null) animations.value = savedAnimations === 'true'
         if (savedHighContrast !== null) highContrast.value = savedHighContrast === 'true'
+        if (savedDarkMode !== null) darkMode.value = savedDarkMode === 'true'
+        if (savedCustomColors) customColors.value = JSON.parse(savedCustomColors)
 
         // Aplicar tema inicial
         applyTheme()
@@ -307,6 +491,8 @@ export const useThemeStore = defineStore('theme', () => {
         compactMode.value = false
         animations.value = true
         highContrast.value = false
+        darkMode.value = false
+        customColors.value = {}
 
         // Limpiar localStorage
         localStorage.removeItem('theme')
@@ -317,8 +503,51 @@ export const useThemeStore = defineStore('theme', () => {
         localStorage.removeItem('compactMode')
         localStorage.removeItem('animations')
         localStorage.removeItem('highContrast')
+        localStorage.removeItem('darkMode')
+        localStorage.removeItem('customColors')
 
         applyTheme()
+    }
+
+    // Guardar tema personalizado
+    const saveCustomTheme = (themeName, themeConfig) => {
+        const customTheme = {
+            id: `custom_${Date.now()}`,
+            name: themeName,
+            config: themeConfig,
+            created_at: new Date().toISOString()
+        }
+
+        savedThemes.value.push(customTheme)
+        localStorage.setItem('savedThemes', JSON.stringify(savedThemes.value))
+
+        return customTheme
+    }
+
+    const loadCustomTheme = (themeId) => {
+        const theme = savedThemes.value.find(t => t.id === themeId)
+        if (theme) {
+            const config = theme.config
+
+            if (config.theme) setTheme(config.theme)
+            if (config.primaryColor) setPrimaryColor(config.primaryColor)
+            if (config.accentColor) setAccentColor(config.accentColor)
+            if (config.sidebarStyle) setSidebarStyle(config.sidebarStyle)
+            if (config.fontSize) setFontSize(config.fontSize)
+            if (config.compactMode !== undefined) compactMode.value = config.compactMode
+            if (config.animations !== undefined) animations.value = config.animations
+            if (config.highContrast !== undefined) highContrast.value = config.highContrast
+            if (config.customColors) customColors.value = config.customColors
+
+            applyTheme()
+            return true
+        }
+        return false
+    }
+
+    const deleteCustomTheme = (themeId) => {
+        savedThemes.value = savedThemes.value.filter(t => t.id !== themeId)
+        localStorage.setItem('savedThemes', JSON.stringify(savedThemes.value))
     }
 
     // Exportar configuración del tema
@@ -332,6 +561,8 @@ export const useThemeStore = defineStore('theme', () => {
             compactMode: compactMode.value,
             animations: animations.value,
             highContrast: highContrast.value,
+            darkMode: darkMode.value,
+            customColors: customColors.value,
             timestamp: new Date().toISOString()
         }
 
@@ -361,6 +592,8 @@ export const useThemeStore = defineStore('theme', () => {
                     if (typeof config.compactMode === 'boolean') compactMode.value = config.compactMode
                     if (typeof config.animations === 'boolean') animations.value = config.animations
                     if (typeof config.highContrast === 'boolean') highContrast.value = config.highContrast
+                    if (typeof config.darkMode === 'boolean') darkMode.value = config.darkMode
+                    if (config.customColors) customColors.value = config.customColors
 
                     // Guardar en localStorage
                     localStorage.setItem('theme', currentTheme.value)
@@ -371,6 +604,8 @@ export const useThemeStore = defineStore('theme', () => {
                     localStorage.setItem('compactMode', compactMode.value)
                     localStorage.setItem('animations', animations.value)
                     localStorage.setItem('highContrast', highContrast.value)
+                    localStorage.setItem('darkMode', darkMode.value)
+                    localStorage.setItem('customColors', JSON.stringify(customColors.value))
 
                     applyTheme()
                     resolve()
@@ -383,8 +618,16 @@ export const useThemeStore = defineStore('theme', () => {
         })
     }
 
+    // Cargar temas guardados
+    const loadSavedThemes = () => {
+        const saved = localStorage.getItem('savedThemes')
+        if (saved) {
+            savedThemes.value = JSON.parse(saved)
+        }
+    }
+
     // Watcher para aplicar cambios automáticamente
-    watch([currentTheme, primaryColor, accentColor, sidebarStyle, fontSize, compactMode, animations, highContrast], () => {
+    watch([currentTheme, primaryColor, accentColor, sidebarStyle, fontSize, compactMode, animations, highContrast, customColors], () => {
         applyTheme()
     }, { deep: true })
 
@@ -398,6 +641,9 @@ export const useThemeStore = defineStore('theme', () => {
         compactMode,
         animations,
         highContrast,
+        darkMode,
+        customColors,
+        savedThemes,
 
         // Getters
         currentThemeData,
@@ -405,6 +651,7 @@ export const useThemeStore = defineStore('theme', () => {
         currentAccentColor,
         currentSidebarStyle,
         currentFontSize,
+        currentFontFamily,
         cssVariables,
 
         // Constantes
@@ -413,6 +660,7 @@ export const useThemeStore = defineStore('theme', () => {
         accentColors,
         sidebarStyles,
         fontSizes,
+        fontFamilies,
 
         // Acciones principales
         setTheme,
@@ -420,14 +668,26 @@ export const useThemeStore = defineStore('theme', () => {
         setAccentColor,
         setSidebarStyle,
         setFontSize,
+        setFontFamily,
         toggleCompactMode,
         toggleAnimations,
         toggleHighContrast,
+        toggleDarkMode,
+        setCustomColor,
+        resetCustomColors,
+
+        // Temas personalizados
+        saveCustomTheme,
+        loadCustomTheme,
+        deleteCustomTheme,
 
         // Utilidades
         initializeTheme,
         resetToDefault,
         exportTheme,
-        importTheme
+        importTheme,
+        loadSavedThemes,
+        generateColorPalette,
+        getContrastColor
     }
 })
