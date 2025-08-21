@@ -21,5 +21,6 @@ export default defineConfig({
     build: {
         outDir: '../staticfiles/frontend',
         assetsDir: 'assets',
+        emptyOutDir: true,
     },
 })

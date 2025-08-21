@@ -397,7 +397,7 @@ import KeyboardShortcuts from '../components/shortcuts/KeyboardShortcuts.vue'
 import OfflineManager from '../components/offline/OfflineManager.vue'
 import {
   PaintBrushIcon,
-  KeyboardIcon,
+  CommandLineIcon,
   WifiIcon,
   BellIcon,
   UserIcon,
@@ -414,7 +414,7 @@ const activeTab = ref('themes')
 // Pestañas disponibles
 const tabs = [
   { id: 'themes', name: 'Temas', icon: PaintBrushIcon },
-  { id: 'shortcuts', name: 'Atajos de Teclado', icon: KeyboardIcon },
+  { id: 'shortcuts', name: 'Atajos de Teclado', icon: CommandLineIcon },
   { id: 'offline', name: 'Modo Offline', icon: WifiIcon },
   { id: 'notifications', name: 'Notificaciones', icon: BellIcon },
   { id: 'user', name: 'Usuario', icon: UserIcon },

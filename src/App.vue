@@ -1,16 +1,9 @@
 <template>
   <div id="app" class="min-h-screen bg-gray-50">
-    <AdminLayout v-if="isAuthenticated" />
-    <LoginView v-else />
+    <router-view />
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { useAuthStore } from './stores/auth'
-import AdminLayout from './components/layout/AdminLayout.vue'
-import LoginView from './views/LoginView.vue'
-
-const authStore = useAuthStore()
-const isAuthenticated = computed(() => authStore.isAuthenticated)
+// La navegación y protección de rutas se maneja en el router
 </script>

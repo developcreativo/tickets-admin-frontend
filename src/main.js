@@ -10,9 +10,9 @@ const pinia = createPinia()
 app.use(pinia)
 app.use(router)
 
-// Inicializar stores después de crear la app
-const { useThemeStore } = await import('./stores/theme')
-const { useNotificationsStore } = await import('./stores/notifications')
+// Inicializar stores de forma estática para evitar mezcla de imports
+import { useThemeStore } from './stores/theme'
+import { useNotificationsStore } from './stores/notifications'
 
 // Inicializar stores
 const themeStore = useThemeStore()
