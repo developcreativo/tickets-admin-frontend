@@ -265,9 +265,12 @@
                       </button>
                       <button
                         @click="removeFromQueue(item.id)"
-                        class="text-gray-600 hover:text-gray-800 text-sm"
+                        class="inline-flex items-center p-2 text-sm font-medium text-gray-600 hover:text-gray-800 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                        title="Eliminar de la cola"
                       >
-                        Eliminar
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
                       </button>
                     </div>
                   </div>
@@ -335,7 +338,7 @@
                   type="number"
                   min="1"
                   max="60"
-                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm"
+                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                   @change="updateSyncInterval"
                 />
               </div>
@@ -348,7 +351,7 @@
                   type="number"
                   min="5"
                   max="60"
-                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm"
+                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                   @change="updateSyncTimeout"
                 />
               </div>
@@ -361,7 +364,7 @@
                   type="number"
                   min="10"
                   max="1000"
-                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm"
+                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                   @change="updateMaxQueueSize"
                 />
               </div>
@@ -374,7 +377,7 @@
                   type="number"
                   min="1"
                   max="10"
-                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm"
+                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                   @change="updateMaxRetries"
                 />
               </div>

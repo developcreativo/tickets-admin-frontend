@@ -259,10 +259,25 @@ export const useThemeStore = defineStore('theme', () => {
 
     // Acciones
     const setTheme = (themeName) => {
+        console.log('Setting theme:', themeName, 'Available themes:', Object.keys(themes))
         if (themes[themeName]) {
+            console.log('Theme found, applying:', themes[themeName])
             currentTheme.value = themeName
             localStorage.setItem('theme', themeName)
+
+            // Aplicar modo oscuro automáticamente para temas oscuros
+            if (themeName === 'dark' || themeName === 'midnight') {
+                darkMode.value = true
+                localStorage.setItem('darkMode', 'true')
+            } else if (themeName === 'light') {
+                darkMode.value = false
+                localStorage.setItem('darkMode', 'false')
+            }
+            // Para otros temas, mantener el modo oscuro actual
+
             applyTheme()
+        } else {
+            console.error('Theme not found:', themeName)
         }
     }
 
@@ -325,12 +340,10 @@ export const useThemeStore = defineStore('theme', () => {
 
     const toggleDarkMode = () => {
         darkMode.value = !darkMode.value
-        if (darkMode.value) {
-            setTheme('dark')
-        } else {
-            setTheme('light')
-        }
         localStorage.setItem('darkMode', darkMode.value)
+
+        // Aplicar el tema actual con el modo oscuro
+        applyTheme()
     }
 
     const setCustomColor = (colorName, colorValue) => {
@@ -347,21 +360,74 @@ export const useThemeStore = defineStore('theme', () => {
 
     // Aplicar tema al DOM
     const applyTheme = () => {
-        const root = document.documentElement
-
-        // Aplicar variables CSS
-        Object.entries(cssVariables.value).forEach(([property, value]) => {
-            root.style.setProperty(property, value)
+        console.log('Applying theme:', {
+            currentTheme: currentTheme.value,
+            darkMode: darkMode.value,
+            primaryColor: primaryColor.value,
+            accentColor: accentColor.value
         })
+
+        const root = document.documentElement
+        const currentThemeData = themes[currentTheme.value]
+
+        // Limpiar variables CSS anteriores
+        root.style.removeProperty('--color-background')
+        root.style.removeProperty('--color-surface')
+        root.style.removeProperty('--color-text')
+        root.style.removeProperty('--color-text-secondary')
+        root.style.removeProperty('--color-border')
+        root.style.removeProperty('--color-success')
+        root.style.removeProperty('--color-warning')
+        root.style.removeProperty('--color-error')
+        root.style.removeProperty('--color-info')
+
+        // Aplicar variables CSS del tema actual
+        if (currentThemeData) {
+            console.log('Applying theme colors:', currentThemeData.colors)
+            root.style.setProperty('--color-background', currentThemeData.colors.background)
+            root.style.setProperty('--color-surface', currentThemeData.colors.surface)
+            root.style.setProperty('--color-text', currentThemeData.colors.text)
+            root.style.setProperty('--color-text-secondary', currentThemeData.colors.textSecondary)
+            root.style.setProperty('--color-border', currentThemeData.colors.border)
+            root.style.setProperty('--color-success', currentThemeData.colors.success)
+            root.style.setProperty('--color-warning', currentThemeData.colors.warning)
+            root.style.setProperty('--color-error', currentThemeData.colors.error)
+            root.style.setProperty('--color-info', currentThemeData.colors.info)
+        }
+
+        // Aplicar variables CSS del color primario y acento
+        const primary = primaryColors[primaryColor.value]
+        const accent = accentColors[accentColor.value]
+
+        if (primary) {
+            root.style.setProperty('--color-primary', primary.value)
+            root.style.setProperty('--color-primary-light', lightenColor(primary.value, 20))
+            root.style.setProperty('--color-primary-dark', darkenColor(primary.value, 20))
+        }
+
+        if (accent) {
+            root.style.setProperty('--color-accent', accent.value)
+            root.style.setProperty('--color-accent-light', lightenColor(accent.value, 20))
+            root.style.setProperty('--color-accent-dark', darkenColor(accent.value, 20))
+        }
 
         // Aplicar clases de tema + dark mode para Tailwind
         root.className = root.className.replace(/theme-\w+/g, '')
         root.classList.add(`theme-${currentTheme.value}`)
-        if (currentTheme.value === 'dark') {
+
+        // Aplicar modo oscuro basado en el estado darkMode, no en el tema
+        if (darkMode.value) {
             root.classList.add('dark')
         } else {
             root.classList.remove('dark')
         }
+
+        console.log('Applied classes:', root.className)
+        console.log('Applied CSS variables:', {
+            background: getComputedStyle(root).getPropertyValue('--color-background'),
+            surface: getComputedStyle(root).getPropertyValue('--color-surface'),
+            text: getComputedStyle(root).getPropertyValue('--color-text')
+        })
 
         // Aplicar modo compacto
         if (compactMode.value) {
@@ -405,7 +471,8 @@ export const useThemeStore = defineStore('theme', () => {
                 primaryColor: primaryColor.value,
                 accentColor: accentColor.value,
                 compactMode: compactMode.value,
-                highContrast: highContrast.value
+                highContrast: highContrast.value,
+                darkMode: darkMode.value
             }
         }))
     }

@@ -9,6 +9,15 @@
         </div>
         <div class="flex items-center space-x-3">
           <button
+            @click="debugTheme"
+            class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-700 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            <svg class="-ml-0.5 mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Debug
+          </button>
+          <button
             @click="themeStore.resetToDefault"
             class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-700 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
@@ -56,17 +65,18 @@
             <button
               v-for="(theme, key) in themeStore.themes"
               :key="key"
-              @click="themeStore.setTheme(key)"
+              @click="() => { console.log('Clicking theme:', key); themeStore.setTheme(key); }"
               :class="[
                 'relative p-3 rounded-lg border-2 transition-all duration-200',
                 themeStore.currentTheme === key
-                  ? 'border-blue-500 bg-blue-50 dark:bg-blue-900'
+                  ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 shadow-lg'
                   : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600'
               ]"
             >
               <div class="flex items-center space-x-2">
                 <div class="w-4 h-4 rounded-full" :style="{ backgroundColor: theme.colors.primary }"></div>
                 <span class="text-xs font-medium text-gray-900 dark:text-gray-100">{{ theme.name }}</span>
+                <span v-if="themeStore.currentTheme === key" class="text-blue-600 dark:text-blue-400 text-xs">✓</span>
               </div>
               <div class="mt-2 flex space-x-1">
                 <div class="w-3 h-3 rounded" :style="{ backgroundColor: theme.colors.background }"></div>
@@ -370,7 +380,7 @@
                   <input
                     v-model="customColor1"
                     type="text"
-                    class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm"
+                    class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
                     placeholder="#000000"
                   />
                 </div>
@@ -387,7 +397,7 @@
                   <input
                     v-model="customColor2"
                     type="text"
-                    class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm"
+                    class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
                     placeholder="#000000"
                   />
                 </div>
@@ -430,8 +440,12 @@
                   </button>
                   <button
                     @click="themeStore.deleteCustomTheme(theme.id)"
-                    class="px-3 py-1 text-xs bg-red-600 dark:bg-red-800 text-white dark:text-gray-100 rounded hover:bg-red-700 dark:hover:bg-red-900 transition-colors"
+                    class="inline-flex items-center px-3 py-1 text-xs bg-red-600 dark:bg-red-800 text-white dark:text-gray-100 rounded hover:bg-red-700 dark:hover:bg-red-900 transition-colors"
+                    title="Eliminar tema personalizado"
                   >
+                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
                     Eliminar
                   </button>
                 </div>
@@ -481,6 +495,25 @@ const formatDate = (dateString) => {
     hour: '2-digit',
     minute: '2-digit'
   })
+}
+
+const debugTheme = () => {
+  const root = document.documentElement
+  const computedStyle = getComputedStyle(root)
+  
+  console.log('=== DEBUG TEMA ===')
+  console.log('Tema actual:', themeStore.currentTheme)
+  console.log('Modo oscuro:', themeStore.darkMode)
+  console.log('Clases aplicadas:', root.className)
+  console.log('Variables CSS aplicadas:')
+  console.log('--color-background:', computedStyle.getPropertyValue('--color-background'))
+  console.log('--color-surface:', computedStyle.getPropertyValue('--color-surface'))
+  console.log('--color-text:', computedStyle.getPropertyValue('--color-text'))
+  console.log('--color-border:', computedStyle.getPropertyValue('--color-border'))
+  console.log('==================')
+  
+  // Mostrar alerta con información del tema
+  alert(`Tema: ${themeStore.currentTheme}\nModo oscuro: ${themeStore.darkMode}\nBackground: ${computedStyle.getPropertyValue('--color-background')}\nSurface: ${computedStyle.getPropertyValue('--color-surface')}`)
 }
 
 // Lifecycle

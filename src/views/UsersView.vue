@@ -162,24 +162,18 @@
                   {{ formatDate(user.date_joined) }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <button 
-                    @click="editUser(user)"
-                    class="text-blue-600 hover:text-blue-900 mr-3"
-                  >
-                    Editar
-                  </button>
-                  <button 
-                    @click="toggleUserStatus(user)"
-                    :class="user.is_active ? 'text-red-600 hover:text-red-900' : 'text-green-600 hover:text-green-900'"
-                  >
-                    {{ user.is_active ? 'Desactivar' : 'Activar' }}
-                  </button>
-                  <button 
-                    @click="deleteUser(user.id)"
-                    class="text-red-600 hover:text-red-900 ml-3"
-                  >
-                    Eliminar
-                  </button>
+                  <ActionButtons 
+                    :show-edit="true"
+                    :show-toggle="true"
+                    :show-delete="true"
+                    :is-active="user.is_active"
+                    edit-title="Editar usuario"
+                    toggle-title="Cambiar estado del usuario"
+                    delete-title="Eliminar usuario"
+                    @edit="editUser(user)" 
+                    @toggle="toggleUserStatus(user)" 
+                    @delete="deleteUser(user.id)"
+                  />
                 </td>
               </tr>
             </tbody>
@@ -256,79 +250,79 @@
 
     <!-- Modal para agregar/editar usuario -->
     <div v-if="showAddModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-      <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+      <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white dark:bg-gray-800">
         <div class="mt-3">
-          <h3 class="text-lg font-medium text-gray-900 mb-4">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
             {{ editingUser ? 'Editar Usuario' : 'Agregar Nuevo Usuario' }}
           </h3>
           <form @submit.prevent="saveUser">
             <div class="space-y-4">
               <div>
-                <label class="block text-sm font-medium text-gray-700">Nombre</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nombre</label>
                 <input 
                   v-model="form.first_name"
                   type="text" 
                   required
-                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 >
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700">Apellido</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Apellido</label>
                 <input 
                   v-model="form.last_name"
                   type="text" 
                   required
-                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 >
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700">Nombre de Usuario</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nombre de Usuario</label>
                 <input 
                   v-model="form.username"
                   type="text" 
                   required
-                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 >
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700">Email</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
                 <input 
                   v-model="form.email"
                   type="email" 
                   required
-                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 >
               </div>
               <div v-if="!editingUser">
-                <label class="block text-sm font-medium text-gray-700">Contraseña</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Contraseña</label>
                 <input 
                   v-model="form.password"
                   type="password" 
                   required
-                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 >
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700">Rol</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Rol</label>
                 <select 
                   v-model="form.role"
                   required
-                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 >
-                  <option value="">Seleccionar rol</option>
-                  <option value="ADMIN">Administrador</option>
-                  <option value="SELLER">Vendedor</option>
-                  <option value="SUPERVISOR">Supervisor</option>
+                  <option value="" class="bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">Seleccionar rol</option>
+                  <option value="ADMIN" class="bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">Administrador</option>
+                  <option value="SELLER" class="bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">Vendedor</option>
+                  <option value="SUPERVISOR" class="bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">Supervisor</option>
                 </select>
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700">Zona</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Zona</label>
                 <select 
                   v-model="form.zone"
-                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 >
-                  <option value="">Sin zona asignada</option>
-                  <option v-for="zone in catalogStore.zones" :key="zone.id" :value="zone.id">
+                  <option value="" class="bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">Sin zona asignada</option>
+                  <option v-for="zone in catalogStore.zones" :key="zone.id" :value="zone.id" class="bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
                     {{ zone.name }}
                   </option>
                 </select>
@@ -338,9 +332,9 @@
                   <input 
                     v-model="form.is_active"
                     type="checkbox" 
-                    class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                    class="rounded border-gray-300 dark:border-gray-600 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 bg-white dark:bg-gray-700"
                   >
-                  <span class="ml-2 text-sm text-gray-700">Usuario activo</span>
+                  <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Usuario activo</span>
                 </label>
               </div>
             </div>
@@ -348,7 +342,7 @@
               <button 
                 type="button"
                 @click="showAddModal = false"
-                class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+                class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
               >
                 Cancelar
               </button>
@@ -370,6 +364,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useUsersStore } from '../stores/users'
 import { useCatalogStore } from '../stores/catalog'
+import ActionButtons from '../components/ui/ActionButtons.vue'
 
 const usersStore = useUsersStore()
 const catalogStore = useCatalogStore()

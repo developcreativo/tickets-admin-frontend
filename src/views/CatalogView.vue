@@ -157,18 +157,14 @@
                   </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <button 
-                    @click="editItem(item)"
-                    class="text-blue-600 hover:text-blue-900 mr-3"
-                  >
-                    Editar
-                  </button>
-                  <button 
-                    @click="deleteItem(item.id)"
-                    class="text-red-600 hover:text-red-900"
-                  >
-                    Eliminar
-                  </button>
+                  <ActionButtons 
+                    :show-edit="true"
+                    :show-delete="true"
+                    edit-title="Editar elemento"
+                    delete-title="Eliminar elemento"
+                    @edit="editItem(item)" 
+                    @delete="deleteItem(item.id)"
+                  />
                 </td>
               </tr>
             </tbody>
@@ -245,9 +241,9 @@
 
     <!-- Modal para agregar/editar item -->
     <div v-if="showAddModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-      <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+      <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white dark:bg-gray-800">
         <div class="mt-3">
-          <h3 class="text-lg font-medium text-gray-900 mb-4">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
             {{ editingItem ? 'Editar' : 'Agregar' }} {{ getTabTitle() }}
           </h3>
           
@@ -255,20 +251,20 @@
           <form v-if="activeTab === 'zones'" @submit.prevent="saveItem">
             <div class="space-y-4">
               <div>
-                <label class="block text-sm font-medium text-gray-700">Nombre</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nombre</label>
                 <input 
                   v-model="zoneForm.name"
                   type="text" 
                   required
-                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 >
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700">Descripción</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Descripción</label>
                 <textarea 
                   v-model="zoneForm.description"
                   rows="3"
-                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 ></textarea>
               </div>
               <div>
@@ -276,9 +272,9 @@
                   <input 
                     v-model="zoneForm.is_active"
                     type="checkbox" 
-                    class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                    class="rounded border-gray-300 dark:border-gray-600 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 bg-white dark:bg-gray-700"
                   >
-                  <span class="ml-2 text-sm text-gray-700">Activo</span>
+                  <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Activo</span>
                 </label>
               </div>
             </div>
@@ -286,7 +282,7 @@
               <button 
                 type="button"
                 @click="showAddModal = false"
-                class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+                class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
               >
                 Cancelar
               </button>
@@ -303,21 +299,21 @@
           <form v-if="activeTab === 'drawTypes'" @submit.prevent="saveItem">
             <div class="space-y-4">
               <div>
-                <label class="block text-sm font-medium text-gray-700">Código</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Código</label>
                 <input 
                   v-model="drawTypeForm.code"
                   type="text" 
                   required
-                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 >
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700">Nombre</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nombre</label>
                 <input 
                   v-model="drawTypeForm.name"
                   type="text" 
                   required
-                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 >
               </div>
               <div>
@@ -325,9 +321,9 @@
                   <input 
                     v-model="drawTypeForm.is_active"
                     type="checkbox" 
-                    class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                    class="rounded border-gray-300 dark:border-gray-600 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 bg-white dark:bg-gray-700"
                   >
-                  <span class="ml-2 text-sm text-gray-700">Activo</span>
+                  <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Activo</span>
                 </label>
               </div>
             </div>
@@ -335,7 +331,7 @@
               <button 
                 type="button"
                 @click="showAddModal = false"
-                class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+                class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
               >
                 Cancelar
               </button>
@@ -352,11 +348,11 @@
           <form v-if="activeTab === 'schedules'" @submit.prevent="saveItem">
             <div class="space-y-4">
               <div>
-                <label class="block text-sm font-medium text-gray-700">Tipo de Sorteo</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipo de Sorteo</label>
                 <select 
                   v-model="scheduleForm.draw_type"
                   required
-                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 >
                   <option value="">Seleccionar tipo de sorteo</option>
                   <option v-for="type in catalogStore.drawTypes" :key="type.id" :value="type.id">
@@ -365,11 +361,11 @@
                 </select>
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700">Zona</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Zona</label>
                 <select 
                   v-model="scheduleForm.zone"
                   required
-                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 >
                   <option value="">Seleccionar zona</option>
                   <option v-for="zone in catalogStore.zones" :key="zone.id" :value="zone.id">
@@ -378,12 +374,12 @@
                 </select>
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700">Hora de Cierre</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Hora de Cierre</label>
                 <input 
                   v-model="scheduleForm.cutoff_time"
                   type="time" 
                   required
-                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 >
               </div>
               <div>
@@ -391,9 +387,9 @@
                   <input 
                     v-model="scheduleForm.is_active"
                     type="checkbox" 
-                    class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                    class="rounded border-gray-300 dark:border-gray-600 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 bg-white dark:bg-gray-700"
                   >
-                  <span class="ml-2 text-sm text-gray-700">Activo</span>
+                  <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Activo</span>
                 </label>
               </div>
             </div>
@@ -401,7 +397,7 @@
               <button 
                 type="button"
                 @click="showAddModal = false"
-                class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+                class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
               >
                 Cancelar
               </button>
@@ -422,6 +418,8 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import { useCatalogStore } from '../stores/catalog'
+import { useAuthStore } from '../stores/auth'
+import ActionButtons from '../components/ui/ActionButtons.vue'
 
 const catalogStore = useCatalogStore()
 

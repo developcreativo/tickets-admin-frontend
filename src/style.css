@@ -176,6 +176,87 @@ body {
     line-height: 1.6;
 }
 
+/* Aplicar variables del tema a elementos específicos */
+.theme-customizer,
+.keyboard-shortcuts,
+.offline-manager,
+.settings-view {
+    background-color: var(--color-background) !important;
+    color: var(--color-text) !important;
+}
+
+/* Aplicar colores del tema a elementos de la interfaz */
+.bg-white {
+    background-color: var(--color-surface) !important;
+}
+
+.bg-gray-50 {
+    background-color: var(--color-surface) !important;
+}
+
+.bg-gray-100 {
+    background-color: var(--color-surface) !important;
+}
+
+.text-gray-900 {
+    color: var(--color-text) !important;
+}
+
+.text-gray-700 {
+    color: var(--color-text-secondary) !important;
+}
+
+.text-gray-500 {
+    color: var(--color-text-secondary) !important;
+}
+
+.border-gray-200 {
+    border-color: var(--color-border) !important;
+}
+
+.border-gray-300 {
+    border-color: var(--color-border) !important;
+}
+
+/* Aplicar colores del tema a botones y elementos interactivos */
+.btn-secondary {
+    background-color: var(--color-surface) !important;
+    color: var(--color-text) !important;
+    border-color: var(--color-border) !important;
+}
+
+.btn-secondary:hover {
+    background-color: var(--color-background) !important;
+}
+
+/* Aplicar colores del tema a badges y estados */
+.bg-green-100 {
+    background-color: var(--color-success) !important;
+    opacity: 0.2;
+}
+
+.bg-yellow-100 {
+    background-color: var(--color-warning) !important;
+    opacity: 0.2;
+}
+
+.bg-red-100 {
+    background-color: var(--color-error) !important;
+    opacity: 0.2;
+}
+
+.text-green-800 {
+    color: var(--color-success) !important;
+}
+
+.text-yellow-800 {
+    color: var(--color-warning) !important;
+}
+
+.text-red-800 {
+    color: var(--color-error) !important;
+}
+
 /* Componentes base */
 .btn {
     @apply inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors;
@@ -537,70 +618,120 @@ body {
     @apply opacity-50 cursor-not-allowed;
 }
 
-/* Dark mode overrides for common Tailwind utilities used across the app */
-html.dark body {
-    background-color: var(--color-background);
-    color: var(--color-text);
+/* Modo oscuro con variables del tema */
+html.dark {
+    /* Aplicar variables del tema en modo oscuro */
+    --color-background: var(--color-background, #111827);
+    --color-surface: var(--color-surface, #1F2937);
+    --color-text: var(--color-text, #F9FAFB);
+    --color-text-secondary: var(--color-text-secondary, #D1D5DB);
+    --color-border: var(--color-border, #374151);
+}
+
+/* Aplicar estilos del tema en modo oscuro */
+html.dark .theme-customizer,
+html.dark .keyboard-shortcuts,
+html.dark .offline-manager,
+html.dark .settings-view {
+    background-color: var(--color-background) !important;
+    color: var(--color-text) !important;
 }
 
 html.dark .bg-white {
-    background-color: #1F2937 !important;
+    background-color: var(--color-surface) !important;
 }
 
 html.dark .bg-gray-50 {
-    background-color: #111827 !important;
-}
-
-html.dark .text-gray-900 {
-    color: #F9FAFB !important;
-}
-
-html.dark .text-gray-700 {
-    color: #E5E7EB !important;
-}
-
-html.dark .text-gray-600 {
-    color: #D1D5DB !important;
-}
-
-html.dark .text-gray-500 {
-    color: #9CA3AF !important;
-}
-
-html.dark .border-gray-200 {
-    border-color: #374151 !important;
-}
-
-html.dark .divide-gray-200> :not([hidden])~ :not([hidden]) {
-    border-color: #374151 !important;
-}
-
-html.dark .bg-blue-50 {
-    background-color: #0B1220 !important;
+    background-color: var(--color-surface) !important;
 }
 
 html.dark .bg-gray-100 {
-    background-color: #1F2937 !important;
+    background-color: var(--color-surface) !important;
 }
 
-/* Cards, tables, dropdowns */
-html.dark .card {
-    background-color: #1F2937 !important;
-    border-color: #374151 !important;
+html.dark .text-gray-900 {
+    color: var(--color-text) !important;
 }
 
-html.dark .table-header {
-    background-color: #0F172A !important;
+html.dark .text-gray-700 {
+    color: var(--color-text-secondary) !important;
 }
 
-html.dark .table-body {
-    background-color: #111827 !important;
+html.dark .text-gray-500 {
+    color: var(--color-text-secondary) !important;
 }
 
-html.dark .dropdown {
-    background-color: #111827 !important;
+html.dark .border-gray-200 {
+    border-color: var(--color-border) !important;
 }
 
-html.dark .dropdown-item {
-    color: #E5E7EB !important;
+html.dark .border-gray-300 {
+    border-color: var(--color-border) !important;
+}
+
+/* Estilos para elementos de formulario en modo oscuro */
+html.dark input[type="text"],
+html.dark input[type="email"],
+html.dark input[type="password"],
+html.dark input[type="number"],
+html.dark input[type="time"],
+html.dark input[type="date"],
+html.dark input[type="tel"],
+html.dark input[type="url"],
+html.dark textarea,
+html.dark select {
+    background-color: var(--color-surface, #1F2937) !important;
+    color: var(--color-text, #F9FAFB) !important;
+    border-color: var(--color-border, #374151) !important;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+    color: var(--color-text-secondary, #9CA3AF) !important;
+}
+
+html.dark select option {
+    background-color: var(--color-surface, #1F2937) !important;
+    color: var(--color-text, #F9FAFB) !important;
+}
+
+html.dark input[type="checkbox"] {
+    background-color: var(--color-surface, #1F2937) !important;
+    border-color: var(--color-border, #374151) !important;
+}
+
+/* Estilos para modales en modo oscuro */
+html.dark .modal,
+html.dark .fixed.inset-0 {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+html.dark .modal-content,
+html.dark .bg-white {
+    background-color: var(--color-surface, #1F2937) !important;
+    border-color: var(--color-border, #374151) !important;
+}
+
+/* Estilos para botones en modo oscuro */
+html.dark .btn-secondary {
+    background-color: var(--color-surface, #1F2937) !important;
+    color: var(--color-text, #F9FAFB) !important;
+    border-color: var(--color-border, #374151) !important;
+}
+
+html.dark .btn-secondary:hover {
+    background-color: var(--color-background, #111827) !important;
+}
+
+/* Estilos para labels en modo oscuro */
+html.dark label {
+    color: var(--color-text-secondary, #D1D5DB) !important;
+}
+
+/* Estilos para focus states en modo oscuro */
+html.dark input:focus,
+html.dark textarea:focus,
+html.dark select:focus {
+    border-color: #3B82F6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
 }

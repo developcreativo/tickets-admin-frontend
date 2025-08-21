@@ -193,25 +193,19 @@
                   {{ formatDate(ticket.created_at) }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <div class="flex space-x-2">
-                    <button 
-                      @click="viewTicket(ticket)"
-                      class="text-blue-600 hover:text-blue-900"
-                    >
-                      Ver
-                    </button>
-                    <button 
-                      @click="editTicket(ticket)"
-                      class="text-green-600 hover:text-green-900"
-                    >
-                      Editar
-                    </button>
-                    <button 
-                      @click="deleteTicket(ticket.id)"
-                      class="text-red-600 hover:text-red-900"
-                    >
-                      Eliminar
-                    </button>
+                  <div class="flex items-center space-x-2">
+                    <!-- Botón Ver -->
+                    <ActionButtons 
+                      :show-view="true"
+                      :show-edit="true"
+                      :show-delete="true"
+                      view-title="Ver ticket"
+                      edit-title="Editar ticket"
+                      delete-title="Eliminar ticket"
+                      @view="viewTicket(ticket)" 
+                      @edit="editTicket(ticket)" 
+                      @delete="deleteTicket(ticket.id)"
+                    />
                   </div>
                 </td>
               </tr>
@@ -313,27 +307,27 @@
             <form @submit.prevent="saveTicket" class="space-y-4">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Zona *</label>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Zona *</label>
                   <select 
                     v-model="ticketForm.zone"
                     required
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                   >
-                    <option value="">Seleccionar zona</option>
-                    <option v-for="zone in catalogStore.zones" :key="zone.id" :value="zone.id">
+                    <option value="" class="bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">Seleccionar zona</option>
+                    <option v-for="zone in catalogStore.zones" :key="zone.id" :value="zone.id" class="bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
                       {{ zone.name }}
                     </option>
                   </select>
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de Sorteo *</label>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tipo de Sorteo *</label>
                   <select 
                     v-model="ticketForm.drawType"
                     required
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                   >
-                    <option value="">Seleccionar tipo</option>
-                    <option v-for="drawType in catalogStore.drawTypes" :key="drawType.id" :value="drawType.id">
+                    <option value="" class="bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">Seleccionar tipo</option>
+                    <option v-for="drawType in catalogStore.drawTypes" :key="drawType.id" :value="drawType.id" class="bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
                       {{ drawType.name }}
                     </option>
                   </select>
@@ -341,7 +335,7 @@
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Números y Piezas *</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Números y Piezas *</label>
                 <div class="space-y-2">
                   <div v-for="(item, index) in ticketForm.items" :key="index" class="flex space-x-2">
                     <input 
@@ -349,7 +343,7 @@
                       type="text"
                       placeholder="Número (00-99)"
                       maxlength="2"
-                      class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
                       required
                     >
                     <input 
@@ -357,13 +351,13 @@
                       type="number"
                       placeholder="Piezas"
                       min="1"
-                      class="w-24 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      class="w-24 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
                       required
                     >
                     <button 
                       type="button"
                       @click="removeItem(index)"
-                      class="px-3 py-2 text-red-600 hover:text-red-800"
+                      class="px-3 py-2 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
                     >
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
@@ -374,7 +368,7 @@
                 <button 
                   type="button"
                   @click="addItem"
-                  class="mt-2 text-blue-600 hover:text-blue-800 text-sm font-medium"
+                  class="mt-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium"
                 >
                   + Agregar número
                 </button>
@@ -384,7 +378,7 @@
                 <button 
                   type="button"
                   @click="closeModal"
-                  class="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300"
+                  class="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-600 rounded-md hover:bg-gray-300 dark:hover:bg-gray-500"
                 >
                   Cancelar
                 </button>
@@ -409,6 +403,7 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { useTicketsStore } from '../stores/tickets'
 import { useCatalogStore } from '../stores/catalog'
 import { useUsersStore } from '../stores/users'
+import ActionButtons from '../components/ui/ActionButtons.vue'
 
 const ticketsStore = useTicketsStore()
 const catalogStore = useCatalogStore()
