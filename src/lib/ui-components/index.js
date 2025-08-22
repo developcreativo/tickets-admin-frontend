@@ -2,12 +2,24 @@
 export { default as BaseInput } from './forms/BaseInput.vue'
 export { default as BaseSelect } from './forms/BaseSelect.vue'
 export { default as BaseButton } from './forms/BaseButton.vue'
+export { default as BaseTextarea } from './forms/BaseTextarea.vue'
+export { default as BaseCheckbox } from './forms/BaseCheckbox.vue'
+export { default as BaseRadio } from './forms/BaseRadio.vue'
 
 // Componentes de Visualización de Datos
 export { default as DataTable } from './data-display/DataTable.vue'
 
 // Componentes de Overlay
 export { default as BaseModal } from './overlay/BaseModal.vue'
+
+// Componentes de Feedback
+export { default as BaseAlert } from './feedback/BaseAlert.vue'
+
+// Componentes de Navegación
+export { default as BaseTabs } from './navigation/BaseTabs.vue'
+
+// Componentes de Layout
+export { default as BaseCard } from './layout/BaseCard.vue'
 
 // Re-exportar componentes existentes
 export { default as ActionButtons } from '../../components/ui/ActionButtons.vue'
@@ -18,12 +30,24 @@ export const ComponentTypes = {
     BaseInput: 'BaseInput',
     BaseSelect: 'BaseSelect',
     BaseButton: 'BaseButton',
+    BaseTextarea: 'BaseTextarea',
+    BaseCheckbox: 'BaseCheckbox',
+    BaseRadio: 'BaseRadio',
 
     // Visualización
     DataTable: 'DataTable',
 
     // Overlay
     BaseModal: 'BaseModal',
+
+    // Feedback
+    BaseAlert: 'BaseAlert',
+
+    // Navegación
+    BaseTabs: 'BaseTabs',
+
+    // Layout
+    BaseCard: 'BaseCard',
 
     // Existente
     ActionButtons: 'ActionButtons'
@@ -208,6 +232,7 @@ export const Utils = {
 }
 
 // Exportar hooks personalizados (opcional)
+import { computed, ref, readonly } from 'vue'
 export const useFormValidation = () => {
     const errors = ref({})
     const isValid = computed(() => Object.keys(errors.value).length === 0)
@@ -289,6 +314,49 @@ export const DefaultProps = {
         disabled: false
     },
 
+    BaseTextarea: {
+        size: 'md',
+        variant: 'default',
+        rows: 3,
+        autoResize: false
+    },
+
+    BaseCheckbox: {
+        size: 'md',
+        variant: 'default',
+        validateOnChange: true
+    },
+
+    BaseRadio: {
+        size: 'md',
+        variant: 'default',
+        validateOnChange: true
+    },
+
+    BaseAlert: {
+        type: 'info',
+        size: 'md',
+        variant: 'default',
+        dismissible: false,
+        showIcon: true
+    },
+
+    BaseTabs: {
+        size: 'md',
+        variant: 'default',
+        vertical: false,
+        lazy: false
+    },
+
+    BaseCard: {
+        size: 'md',
+        variant: 'default',
+        elevation: 'md',
+        hoverable: false,
+        showHeader: true,
+        showFooter: false
+    },
+
     DataTable: {
         pageSize: 10,
         showPagination: true,
@@ -308,20 +376,30 @@ export const DefaultProps = {
 
 // Exportar todo como un objeto
 export default {
-    // Componentes
-    BaseInput,
-    BaseSelect,
-    BaseButton,
+    // Componentes de Formularios
+    BaseInput, BaseSelect, BaseButton, BaseTextarea, BaseCheckbox, BaseRadio,
+
+    // Componentes de Visualización
     DataTable,
+
+    // Componentes de Overlay
     BaseModal,
+
+    // Componentes de Feedback
+    BaseAlert,
+
+    // Componentes de Navegación
+    BaseTabs,
+
+    // Componentes de Layout
+    BaseCard,
+
+    // Componentes Existentes
     ActionButtons,
 
     // Configuración
-    ComponentTypes,
-    ThemeConfig,
-    DefaultProps,
+    ComponentTypes, ThemeConfig, DefaultProps,
 
     // Utilidades
-    Utils,
-    useFormValidation
+    Utils, useFormValidation
 }

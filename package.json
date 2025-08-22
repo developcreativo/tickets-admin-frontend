@@ -1,48 +1,86 @@
 {
-    "name": "tickets-admin-frontend",
-    "version": "1.0.0",
-    "description": "Dashboard de administración para sistema de emisión de tickets",
-    "type": "module",
-    "main": "index.js",
-    "scripts": {
-        "dev": "vite",
-        "build": "vite build",
-        "preview": "vite preview",
-        "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
-        "format": "prettier --write src/",
-        "test:e2e": "playwright test",
-        "test:e2e:ui": "playwright test --ui",
-        "test:e2e:headed": "playwright test --headed",
-        "test:e2e:install": "playwright install --with-deps"
-    },
-    "dependencies": {
-        "vue": "^3.4.0",
-        "vue-router": "^4.2.5",
-        "pinia": "^2.1.7",
-        "axios": "^1.6.0",
-        "@headlessui/vue": "^1.7.16",
-        "@heroicons/vue": "^2.0.18",
-        "chart.js": "^4.4.0",
-        "vue-chartjs": "^5.3.0",
-        "date-fns": "^2.30.0"
-    },
-    "devDependencies": {
-        "@vitejs/plugin-vue": "^5.0.0",
-        "vite": "^5.0.0",
-        "eslint": "^8.56.0",
-        "eslint-plugin-vue": "^9.19.2",
-        "prettier": "^3.1.0",
-        "tailwindcss": "^3.3.6",
-        "autoprefixer": "^10.4.16",
-        "postcss": "^8.4.32",
-        "@playwright/test": "^1.46.0"
-    },
-    "keywords": [
-        "vue",
-        "admin",
-        "dashboard",
-        "tickets"
-    ],
-    "author": "Equipo de Desarrollo",
-    "license": "MIT"
+  "name": "tickets-admin-frontend",
+  "version": "1.0.0",
+  "description": "Dashboard de administración para sistema de emisión de tickets",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "format": "prettier --write src/",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest --watch",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "type-check": "vue-tsc --noEmit",
+    "type-check:watch": "vue-tsc --noEmit --watch",
+    "build-lib": "vite build --config build-lib.config.js",
+    "preview-lib": "vite preview --config build-lib.config.js"
+  },
+  "dependencies": {
+    "@headlessui/vue": "^1.7.16",
+    "@heroicons/vue": "^2.0.18",
+    "axios": "^1.6.0",
+    "chart.js": "^4.4.0",
+    "date-fns": "^2.30.0",
+    "pinia": "^2.1.7",
+    "vue": "^3.4.0",
+    "vue-chartjs": "^5.3.0",
+    "vue-router": "^4.2.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.46.0",
+    "@storybook/addon-a11y": "^7.6.0",
+    "@storybook/addon-backgrounds": "^7.6.0",
+    "@storybook/addon-controls": "^7.6.0",
+    "@storybook/addon-interactions": "^7.6.0",
+    "@storybook/addon-links": "^7.6.0",
+    "@storybook/addon-viewport": "^7.6.0",
+    "@storybook/testing-library": "^0.2.2",
+    "eslint-plugin-storybook": "^0.6.15",
+    "@storybook/vue3": "^7.6.0",
+    "@storybook/vue3-vite": "^7.6.0",
+    "@types/node": "^20.10.0",
+    "@vitejs/plugin-vue": "^5.0.0",
+    "@vitest/browser": "^1.6.1",
+    "@vitest/coverage-v8": "^1.6.1",
+    "@vitest/ui": "^1.6.1",
+    "@vue/eslint-config-prettier": "^8.0.0",
+    "@vue/test-utils": "^2.4.0",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^8.56.0",
+    "eslint-plugin-vue": "^9.19.2",
+    "jsdom": "^23.0.0",
+    "playwright": "^1.55.0",
+    "postcss": "^8.4.32",
+    "prettier": "^3.1.0",
+    "storybook": "^7.6.0",
+    "tailwindcss": "^3.3.6",
+    "typescript": "^5.3.0",
+    "vite": "^5.0.0",
+    "vitest": "^1.6.1",
+    "vue-tsc": "^1.8.25"
+  },
+  "keywords": [
+    "vue",
+    "admin",
+    "dashboard",
+    "tickets"
+  ],
+  "author": "Equipo de Desarrollo",
+  "license": "MIT",
+  "eslintConfig": {
+    "extends": [
+      "plugin:storybook/recommended"
+    ]
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
 }
