@@ -38,7 +38,7 @@ export const useReportsStore = defineStore('reports', () => {
             if (params.includeDaily) queryParams.append('daily', '1')
             if (params.forceRefresh) queryParams.append('refresh', '1')
 
-            const response = await api.get(`/sales/reports/summary/?${queryParams}`)
+            const response = await api.get(`/sales/tickets/reports/summary/?${queryParams}`)
 
             // Actualizar estado
             reports.value = response.data.summary || []
@@ -64,48 +64,85 @@ export const useReportsStore = defineStore('reports', () => {
             isLoading.value = true
             error.value = null
 
-            // Construir query params
-            const queryParams = new URLSearchParams()
+            // Obtener datos del reporte usando el endpoint que sabemos que funciona
+            const reportData = await fetchSummaryReport(params)
 
-            if (params.startDate) queryParams.append('start', params.startDate)
-            if (params.endDate) queryParams.append('end', params.endDate)
-            if (params.zone) queryParams.append('zone', params.zone)
-            if (params.drawType) queryParams.append('draw_type', params.drawType)
-            if (params.user) queryParams.append('user', params.user)
-            if (params.groupBy) queryParams.append('group_by', params.groupBy)
-            if (params.includeDaily) queryParams.append('daily', '1')
-
-            queryParams.append('format', format)
-
-            const response = await api.get(`/sales/reports/export/?${queryParams}`, {
-                responseType: 'blob'
-            })
-
-            // Crear y descargar archivo
-            const url = window.URL.createObjectURL(new Blob([response.data]))
-            const link = document.createElement('a')
-            link.href = url
-
-            const filename = `reporte_${new Date().toISOString().split('T')[0]}.${format}`
-            link.setAttribute('download', filename)
-            document.body.appendChild(link)
-            link.click()
-            link.remove()
-            window.URL.revokeObjectURL(url)
+            // Generar archivo en el frontend
+            if (format === 'csv') {
+                const csvContent = generateCSV(reportData)
+                downloadFile(csvContent, `reporte_${new Date().toISOString().split('T')[0]}.csv`, 'text/csv')
+            } else if (format === 'xlsx') {
+                // Para XLSX necesitaríamos una librería como SheetJS
+                // Por ahora, usar CSV como fallback
+                const csvContent = generateCSV(reportData)
+                downloadFile(csvContent, `reporte_${new Date().toISOString().split('T')[0]}.csv`, 'text/csv')
+            }
 
             return true
         } catch (err) {
             console.error('Error exporting report:', err)
-            error.value = 'Error al exportar el reporte'
+            console.error('Error details:', {
+                status: err.response?.status,
+                statusText: err.response?.statusText,
+                data: err.response?.data,
+                url: err.config?.url,
+                method: err.config?.method
+            })
+            error.value = `Error al exportar el reporte: ${err.response?.status} - ${err.response?.statusText}`
             throw err
         } finally {
             isLoading.value = false
         }
     }
 
+    const generateCSV = (data) => {
+        const lines = []
+
+        // Encabezados
+        lines.push('Grupo,Total Tickets,Total Pedazos')
+
+        // Datos
+        if (data.summary) {
+            data.summary.forEach(row => {
+                lines.push(`"${row.group}",${row.total_tickets},${row.total_pieces}`)
+            })
+        }
+
+        // Línea en blanco
+        lines.push('')
+
+        // Totales
+        if (data.totals) {
+            lines.push(`"Totales",${data.totals.total_tickets},${data.totals.total_pieces}`)
+        }
+
+        // Datos diarios si existen
+        if (data.daily && data.daily.length > 0) {
+            lines.push('')
+            lines.push('Fecha,Total Tickets,Total Pedazos')
+            data.daily.forEach(row => {
+                lines.push(`"${row.date}",${row.total_tickets},${row.total_pieces}`)
+            })
+        }
+
+        return lines.join('\n')
+    }
+
+    const downloadFile = (content, filename, contentType) => {
+        const blob = new Blob([content], { type: contentType })
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', filename)
+        document.body.appendChild(link)
+        link.click()
+        link.remove()
+        window.URL.revokeObjectURL(url)
+    }
+
     const getCacheStats = async () => {
         try {
-            const response = await api.get('/sales/cache/stats/')
+            const response = await api.get('/sales/tickets/cache/stats/')
             return response.data
         } catch (err) {
             console.error('Error getting cache stats:', err)
@@ -115,7 +152,7 @@ export const useReportsStore = defineStore('reports', () => {
 
     const clearCache = async () => {
         try {
-            const response = await api.post('/sales/cache/clear/')
+            const response = await api.post('/sales/tickets/cache/clear/')
             return response.data
         } catch (err) {
             console.error('Error clearing cache:', err)

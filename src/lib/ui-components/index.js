@@ -1,5 +1,5 @@
 // Componentes de Formularios
-export { default as BaseInput } from './forms/BaseInput.vue'
+export { default as BaseInput } from '../../components/ui/BaseInput.vue'
 export { default as BaseSelect } from './forms/BaseSelect.vue'
 export { default as BaseButton } from './forms/BaseButton.vue'
 export { default as BaseTextarea } from './forms/BaseTextarea.vue'

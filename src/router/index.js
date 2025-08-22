@@ -57,6 +57,13 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
     const authStore = useAuthStore()
 
+    // Si vamos a login y ya estamos autenticados, redirigir al dashboard
+    if (to.path === '/login' && authStore.isAuthenticated) {
+        console.log('Already authenticated, redirecting to dashboard')
+        next('/')
+        return
+    }
+
     // Si vamos a login, permitir siempre
     if (to.path === '/login') {
         console.log('Going to login page')
